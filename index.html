@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+
+<!--[if lt IE 7]>      <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html lang="en" ng-app="myApp" class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html lang="en" ng-app="myApp" class="no-js"> <!--<![endif]-->
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>ATNG Interface</title>
+
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="bower_components/html5-boilerplate/dist/css/normalize.css">
+  <link rel="stylesheet" href="bower_components/html5-boilerplate/dist/css/main.css">
+  <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+  <link rel="stylesheet" href="bower_components/angular-ui/build/angular-ui.min.css">
+  <link rel="stylesheet" href="bower_components/ng-table/dist/ng-table.min.css">
+  <link rel="stylesheet" href="css/select.min.css">
+  <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css">
+  <link rel="stylesheet" href="app.css">
+
+  <script src="bower_components/html5-boilerplate/dist/js/vendor/modernizr-2.8.3.min.js"></script>
+</head>
+<body>
+
+    <nav class="navbar navbar-inverse navbar-default navbar-fixed-top" role="navigation">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand navbar-left" href="#/home"><img height="20" src="img/atng.png"></a>
+        </div>
+
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li>
+                    <a href="#/containers" title="Containers">Containers</a>
+                </li>
+
+                <li>
+                    <a href="#/images" title="Images">Images</a>
+                </li>
+
+                <li>
+                    <a href="#/networks" title="Network">Networks</a>
+                </li>
+
+                <li>
+                    <a href="#/container-add" title="Add Container">Add Container</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+  <!--[if lt IE 7]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+  <![endif]-->
+
+  <div ng-view></div>
+
+  <script src="bower_components/angular/angular.js"></script>
+  <script src="bower_components/angular-route/angular-route.js"></script>
+  <script src="bower_components/jquery/dist/jquery.js"></script>
+  <script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+  <script src="bower_components/ng-table/dist/ng-table.min.js"></script>
+  <script src="js/select.min.js"></script>
+  <script src="bower_components/angular-sanitize/angular-sanitize.min.js"></script>
+  <script src="bower_components/underscore/underscore-min.js"></script>
+
+  <script src="app.js"></script>
+
+  <script src="modules/container/ContainerController.js"></script>
+  <script src="modules/container/ContainerService.js"></script>
+
+  <script src="modules/image/ImageController.js"></script>
+  <script src="modules/image/ImageService.js"></script>
+
+  <script src="modules/network/NetworkController.js"></script>
+  <script src="modules/network/NetworkService.js"></script>
+
+
+
+  <script src="modules/weakness/WeaknessController.js"></script>
+  <script src="modules/weakness/WeaknessService.js"></script>
+
+  <script src="modules/localweakness/LocalWeaknessController.js"></script>
+  <script src="modules/localweakness/LocalWeaknessService.js"></script>
+
+  <script src="modules/topic/TopicController.js"></script>
+  <script src="modules/topic/TopicService.js"></script>
+
+  <script src="components/version/version.js"></script>
+  <script src="components/version/version-directive.js"></script>
+  <script src="components/version/interpolate-filter.js"></script>
+
+</body>
+</html>

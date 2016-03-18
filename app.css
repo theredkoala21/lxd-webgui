@@ -1,0 +1,62 @@
+/* app css stylesheet */
+
+/* RUD: make more space */
+body{
+    margin-top:60px;
+    margin-left:10px;
+    margin-right:10px;
+}
+
+/* RUD: fix line break in tables (e.g. bombs) */
+.table{
+  word-wrap:break-word;
+  word-break:break-word;
+}
+
+
+/* RUD: normal blockquote... */
+blockquote {
+    font-size: 100%;
+}
+
+
+#searchclear {
+    position: absolute;
+    right: 25px;
+    top: 0;
+    bottom: 0;
+    height: 14px;
+    margin: auto;
+    font-size: 14px;
+    cursor: pointer;
+    color: #ccc;
+}
+
+.menu {
+  list-style: none;
+  border-bottom: 0.1em solid black;
+  margin-bottom: 2em;
+  padding: 0 0 0.5em;
+}
+
+.menu:before {
+  content: "[";
+}
+
+.menu:after {
+  content: "]";
+}
+
+.menu > li {
+  display: inline;
+}
+
+.menu > li:before {
+  content: "|";
+  padding-right: 0.3em;
+}
+
+.menu > li:nth-child(1):before {
+  content: "";
+  padding: 0;
+}
