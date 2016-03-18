@@ -3,12 +3,12 @@
     <div class="col-md-12" ng-show="containers.length > 0">
         <table class="table table-condensed">
             <thead>
-            <th class="col-md-3">Name</th>
-            <th class="col-md-3">Status</th>
-            <th class="col-md-3">Architecture</th>
+            <th class="none">Name</th>
+            <th class="none">Status</th>
+            <th class="none">Architecture</th>
             <th class="none">Stateful</th>
-            <th class="none">Topic / Tags</th>
-            <th class="none">Action</th>
+            <th class="none"></th>
+            <th class="none">Edit</th>
             </thead>
 
             <tbody>
@@ -27,6 +27,11 @@
 
                     <td>
                       {{container.stateful}}
+                    </td>
+
+                    <td>
+                      <a class="btn btn-sm btn-success" ng-click="changeState('start')"><i class="glyphicon glyphicon-plus"></i>Start</a>
+                      <a class="btn btn-sm btn-success" ng-click="changeState('stop')"><i class="glyphicon glyphicon-plus"></i>Stop</a>
                     </td>
 
                     <td>

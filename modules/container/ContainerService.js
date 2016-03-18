@@ -64,6 +64,18 @@ angular.module('myApp.container')
                       return $http.get('https://localhost:9000/1.0/containers/' + containerName + '/state');
                     }
 
+                    obj.changeState = function(containerName, state) {
+                      var data =
+                      {
+                        "action": state,        // State change action (stop, start, restart, freeze or unfreeze)
+                        "timeout": 30,          // A timeout after which the state change is considered as failed
+                        "force": false,          // Force the state change (currently only valid for stop and restart where it means killing the container)
+                        "stateful": true        // Whether to store or restore runtime state before stopping or startiong (only valid for stop and start, defaults to false)
+                      }
+
+                      return $http.put('https://localhost:9000/1.0/containers/' + containerName + '/state', data);
+                    }
+
                     return obj;
 
             }])

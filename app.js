@@ -5,14 +5,10 @@ angular.module('myApp', [
   'ngTable',
   'ui.select',
   'ngSanitize',
-  'myApp.version',
+
   'myApp.container',
   'myApp.image',
   'myApp.network',
-
-  'myApp.weakness',
-  'myApp.localweakness',
-  'myApp.topic'
 ]).
 
 config(['$routeProvider', function($routeProvider) {

@@ -31,6 +31,10 @@ angular.module('myApp.container', ['ngRoute'])
         $scope.container = container.data.metadata;
 
         $scope.container.state = containerState.data.metadata;
+
+        $scope.changeState = function(state) {
+          
+        }
     })
 
     .controller('containerListCtrl', function ($scope, $routeParams, $filter, $location, ContainerServices) {
