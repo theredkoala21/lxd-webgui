@@ -4,6 +4,7 @@ angular.module('myApp', [
   'ngRoute',
   'ngTable',
   'ui.select',
+  'ui.bootstrap',
   'ngSanitize',
 
   'myApp.container',

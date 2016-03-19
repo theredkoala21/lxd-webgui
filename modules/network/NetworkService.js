@@ -1,9 +1,14 @@
 'use strict';
 
 angular.module('myApp.network')
-        .factory('NetworkServices', ['$http',
-            function ($http) {
+        .factory('NetworkServices', ['$http', '$q',
+            function ($http, $q) {
               var obj = {};
+
+              // Get a container
+              obj.getByName =  function (networkName) {
+                return $http.get('https://localhost:9000/1.0/networks/' + networkName);
+              }
 
                 // Get a network
                 obj.get =  function (networkName, callback) {
@@ -21,26 +26,23 @@ angular.module('myApp.network')
 
 
                     // Get all networks
-                obj.getAll = function(callback) {
-                        $http.get('https://localhost:9000/1.0/networks').success(function (data) {
+                obj.getAll = function() {
+                        return $http.get('https://localhost:9000/1.0/networks').then(function (data) {
                           // {"type":"sync","status":"Success","status_code":200,
                           // "metadata":["/1.0/networks/hacking"]}
+                          data = data.data;
 
                           if (data.status != "Success") {
-                            console.log("Err");
+                            return $q.reject("Error");
                           }
 
-                          var networks = [];
-                          for(var n=0; n < data.metadata.length; n++) {
-                            var c = data.metadata[n];
+                          var promises = data.metadata.map(function(networkUrl) {
+                              return $http.get('https://localhost:9000' + networkUrl).then(function(resp) {
+                                  return resp.data.metadata;
+                              });
+                          });
 
-                            obj.getByUrl(c, function(data2) {
-                              networks.push(data2.metadata);
-                            });
-
-                          }
-
-                            callback(networks);
+                          return $q.all(promises);
                         });
                     }
 

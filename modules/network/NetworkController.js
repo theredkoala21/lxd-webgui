@@ -6,17 +6,19 @@ angular.module('myApp.network', ['ngRoute'])
                 title: 'Networks',
                 templateUrl: 'modules/network/networks.html',
                 controller: 'networkListCtrl',
+                resolve: {
+                  networks: function(NetworkServices) {
+                    return NetworkServices.getAll();
+                  }
+                }
             })
-            .when('/network-view/:networkID', {
+            .when('/network-view/:networkName', {
                 title: 'Networks',
                 templateUrl: 'modules/network/network-view.html',
                 controller: 'networkViewCtrl',
                 resolve : {
-                    topics: function(TopicServices, $route) {
-                        return TopicServices.getTopics();
-                    },
                     network: function(NetworkServices, $route) {
-                        return NetworkServices.getDirect($route.current.params.networkID)
+                        return NetworkServices.getByName($route.current.params.networkName)
                     }
                 }
             })
@@ -24,15 +26,14 @@ angular.module('myApp.network', ['ngRoute'])
         }])
 
 
-    .controller('networkViewCtrl', function ($scope, $routeParams, $filter, $location, topics, network, NetworkServices) {
-        var networkID = $routeParams.networkID;
+    .controller('networkViewCtrl', function ($scope, $routeParams, $filter, $location, network, NetworkServices) {
+      $scope.network = network.data.metadata;
 
     })
 
-    .controller('networkListCtrl', function ($scope, $routeParams, $filter, $location, NetworkServices) {
-      $scope.networks = [];
-        NetworkServices.getAll(function(data) {
-          $scope.networks = data;
-        });
+    .controller('networkListCtrl', function ($scope, $routeParams, $filter, $location,
+      NetworkServices, networks)
+    {
+      $scope.networks = networks;
     })
 ;

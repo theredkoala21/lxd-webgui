@@ -1,0 +1,41 @@
+
+
+<div class="row">
+    <div class="col-md-4">
+        <table class="table table-condensed">
+            <tbody>
+                <tr>
+                    <td> Name </td>
+                    <td> <input ng-model="container.name" type="text" value="{{container.name}}"> </td>
+                </tr>
+
+                <tr>
+                    <td> Ephemeral </td>
+                    <td> {{container.ephemeral}} </td>
+                </tr>
+                <tr>
+                    <td> Stateful </td>
+                    <td> {{container.stateful}} </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+      <div class="col-md-5">
+        Images: 
+        <table class="table table-condensed">
+
+        <tbody>
+            <tr ng-repeat="image in images">
+                <td>
+                    <b>{{image.filename}}</b>
+                </td>
+                <td>
+                    <b>{{image.architecture}}</b>
+                </td>
+
+            </tr>
+        </tbody>
+      </table>
+      </div>
+  </div>

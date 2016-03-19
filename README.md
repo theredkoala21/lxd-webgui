@@ -44,12 +44,14 @@ openssl pkcs12 -export -out cert.p12 -inkey key.pem -in cert.pem
 
 ## lxd configuration
 
-Configure LXD to listen to localhost on port 9000, and allow access from localhost port 8000. Also add cert to the trusted certs for lxd.
+Configure LXD to listen to localhost on port 9000, and allow access from localhost port 8000. Also add cert to the trusted certs for lxd. We also have to configure LXD to accept the PUT, DELETE and OPTIONS HTTP headers, and fix allowed headers to  include "Content-Type".
 
 ```
 lxc config trust add cert.pem
 lxc config set core.https_address 127.0.0.1:9000
 lxc config set core.https_allowed_origin https://localhost:8000
+lxc config set core.https_allowed_methods "GET, POST, PUT, DELETE, OPTIONS"
+lxc config set core.https_allowed_headers "Origin, X-Requested-With, Content-Type, Accept"
 ```
 
 ## browser configuration
