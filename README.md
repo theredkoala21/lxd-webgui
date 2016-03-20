@@ -12,11 +12,11 @@ This software is pre-alpha.
 
 ## LXD
 
-install lxd: as described here:
+install lxd as described here:
  - https://linuxcontainers.org/lxd/getting-started-cli/
  - https://www.stgraber.org/2016/03/15/lxd-2-0-installing-and-configuring-lxd-212/
  
- 
+My lxd init looks like this:
 ```
 $ sudo lxd init
 Name of the storage backend to use (dir or zfs): zfs
@@ -31,6 +31,7 @@ LXD has been successfully configured.
 
 ## Prerequisites
 
+Install npm, bower and a simple http server:
 ```
 $ sudo apt-get install npm
 $ sudo npm install -g bower
@@ -39,27 +40,27 @@ $ sudo npm install -g http-server
 
 ## Dependencies
 
-install web dependencies:
+install web dependencies for lxc-gui:
 ```
-bower install
+lxd-webgui$ bower install
 ```
 
 ## HTTP server
 
 create certs for the http server:
 ```
-openssl req -x509 -newkey rsa:2048 -keyout key.pem -out cert.pem -days 365 -nodes
+lxd-webgui$ openssl req -x509 -newkey rsa:2048 -keyout key.pem -out cert.pem -days 365 -nodes
 ```
 
 
-start http server to serer lxd-webgui:
+start http server to serve lxd-webgui:
 ```
-http-server -S -a localhost -p 8000 
+lxd-webgui$ http-server -S -a localhost -p 8000 
 ```
 
 ## lxd configuration
 
-###  certs
+### certs
 
 Create a self-signed cert to authenticate to LXD:
 
@@ -73,7 +74,7 @@ Content of certificate (CN, AU etc.) does not matter.
 
 Convert cert to pkcs12:
 ```
-openssl pkcs12 -export -out cert.p12 -inkey key.pem -in cert.pem
+$ openssl pkcs12 -export -out cert.p12 -inkey key.pem -in cert.pem
 ```
 
 Now, add the PKCS12 cert.p12 to your browser:
@@ -89,10 +90,10 @@ Afterwards, we NEED to restart it atm.
 
 ```
 $ sudo lxc config trust add cert.pem
-sudo lxc config set core.https_address 127.0.0.1:9000
-sudo lxc config set core.https_allowed_origin https://localhost:8000
-sudo lxc config set core.https_allowed_methods "GET, POST, PUT, DELETE, OPTIONS"
-sudo lxc config set core.https_allowed_headers "Origin, X-Requested-With, Content-Type, Accept"
+$ sudo lxc config set core.https_address 127.0.0.1:9000
+$ sudo lxc config set core.https_allowed_origin https://localhost:8000
+$ sudo lxc config set core.https_allowed_methods "GET, POST, PUT, DELETE, OPTIONS"
+$ sudo lxc config set core.https_allowed_headers "Origin, X-Requested-With, Content-Type, Accept"
 $ sudo lxd restart
 ```
 
@@ -109,3 +110,7 @@ try to access lxd: https://localhost:9000
 # security considerations
 
 Do not let any other application run on the same domain+port as lxd-gui.
+
+
+There is no CSRF protection for the LXD REST service. 
+
