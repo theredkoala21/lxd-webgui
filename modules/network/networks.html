@@ -4,10 +4,7 @@
         <table class="table table-condensed">
             <thead>
             <th class="col-md-3">Name</th>
-            <th class="col-md-3">Status</th>
-            <th class="col-md-3">Architecture</th>
-            <th class="none">Stateful</th>
-            <th class="none">Topic / Tags</th>
+            <th class="col-md-3">Type</th>
             <th class="none">Action</th>
             </thead>
 
@@ -18,20 +15,11 @@
                     </td>
 
                     <td>
-                      {{network.status}}
+                      {{network.type}}
                     </td>
 
                     <td>
-                      {{network.architecture}}
-                    </td>
-
-                    <td>
-                      {{network.stateful}}
-                    </td>
-
-                    <td>
-                        <a class="btn btn-sm btn-success" ng-click="addAsNew(network)"><i class="glyphicon glyphicon-plus"></i>Edit</a>
-                        <a class="btn btn-sm btn-success" href="#/network-view/{{network.name}}"><i class="glyphicon glyphicon-plus"></i>View</a>
+                        <a class="btn btn-sm btn-primary" href="#/network-view/{{network.name}}"><i class="glyphicon glyphicon-edit"></i>View</a>
                     </td>
                 </tr>
             </tbody>
