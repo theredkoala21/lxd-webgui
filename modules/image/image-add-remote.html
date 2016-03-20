@@ -1,0 +1,88 @@
+<div class="row">
+    Remote Image:
+    <div class="col-md-12">
+        <table class="table table-condensed">
+            <tr>
+                <td class="col-md-1">Source URL
+                </td>
+
+                <td class="col-md-7">
+                    <input size="64" type="text" ng-model="url">
+                </td>
+            </tr>
+
+            <tr>
+                <td>Public?
+                </td>
+
+                <td>True
+                </td>
+            </tr>
+
+
+            <tr>
+                <td>
+                    <a class="btn btn-sm btn-primary" ng-click="addRemoteImage()">
+                        <i class="glyphicon glyphicon-add"></i>Add</a>
+                </td>
+
+                <td>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<div class="row">
+    Image Source:
+    <div class="col-md-12">
+        <table class="table table-condensed">
+            <tr>
+                <td class="col-md-1">Server
+                </td>
+
+                <td class="col-md-7">
+                    <input size="64" type="text" ng-model="source.server">
+                </td>
+            </tr>
+
+            <tr>
+                <td> Protocol:
+                </td>
+
+                <td>simplestreams
+                </td>
+            </tr>
+
+
+            <tr>
+                <td> Fingerprint:
+                </td>
+
+                <td><input size="64" type="text" ng-model="source.fingerprint">
+                </td>
+            </tr>
+
+            <tr>
+                <td>Alias:
+                </td>
+
+                <td><input size="64" type="text" ng-model="source.alias">
+                </td>
+            </tr>
+
+
+            <tr>
+                <td>
+                    <a class="btn btn-sm btn-primary" ng-click="addSourceImage()"><i
+                            class="glyphicon glyphicon-add"></i>Add</a>
+                </td>
+
+                <td>
+
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>

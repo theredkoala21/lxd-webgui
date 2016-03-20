@@ -51,6 +51,54 @@ angular.module('myApp.image')
                   });
                 }
 
+                obj.addRemoteImage = function(url) {
+                    var data = {
+                        "public": true,
+                        "filename": "test",
+                        "properties": {
+                            "os": "Ubuntu"
+                        },
+                        "source": {
+                            "type": "url",
+                            "url": url
+                        }
+                    };
+
+                    $http.post('https://localhost:9000/1.0/images', data).then(function(data) {
+                        var opUrl = data.data.operation;
+                        $http.get('https://localhost:9000' + opUrl);
+                    });
+                }
+
+
+                obj.addSourceImage = function(url) {
+                    var data = {
+//                    "filename": filename,               // Used for export (optional)
+                    "public": true,                         //# Whether the image can be downloaded by untrusted users (defaults to false)
+//                    "auto_update": true,                    //# Whether the image should be auto-updated (optional; defaults to false)
+//                    "properties": {                         //# Image properties (optional, applied on top of source properties)
+//                        "os": "Ubuntu"
+//                    },
+                    "source": {
+                        "type": "image",
+                        "mode": "pull",                     //# Only pull is supported for now
+                        "server": "https://cloud-images.ubuntu.com/releases",  //# Remote server (pull mode only)
+                        "protocol": "simplestreams",                  //# Protocol (one of lxd or simplestreams, defaults to lxd)
+//                        "secret": "my-secret-string",      // # Secret (pull mode only, private images only)
+//                        "certificate": "PEM certificate",   //# Optional PEM certificate. If not mentioned, system CA is used.
+                        "fingerprint": "3f5e2f5074c2",            //# Fingerprint of the image (must be set if alias isn't)
+//                        "alias": "ubuntu/devel",            //# Name of the alias (must be set if fingerprint isn't)
+                        }
+                    }
+
+                    $http.post('https://localhost:9000/1.0/images', data).then(function(data) {
+                        var opUrl = data.data.operation;
+                        $http.get('https://localhost:9000' + opUrl);
+                    });
+                }
+
+
+
                 return obj;
             }])
 ;
