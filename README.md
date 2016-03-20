@@ -8,62 +8,101 @@ backend services. Just serve the static HTML and JS files.
 
 This software is pre-alpha.
 
-# basics
+# installation
+
+## LXD
+
+install lxd: as described here:
+ - https://linuxcontainers.org/lxd/getting-started-cli/
+ - https://www.stgraber.org/2016/03/15/lxd-2-0-installing-and-configuring-lxd-212/
+ 
+ 
+```
+$ sudo lxd init
+Name of the storage backend to use (dir or zfs): zfs
+Create a new ZFS pool (yes/no)? yes
+Name of the new ZFS pool: lxdpool
+Would you like to use an existing block device (yes/no)? no
+Size in GB of the new loop device (1GB minimum): 16
+Would you like LXD to be available over the network (yes/no)? no
+LXD has been successfully configured.
+```
+
+
+## Prerequisites
 
 ```
-apt-get install npm
-npm install -g bower
-npm install -g http-server
+$ sudo apt-get install npm
+$ sudo npm install -g bower
+$ sudo npm install -g http-server
 ```
 
-install dependencies:
+## Dependencies
+
+install web dependencies:
 ```
 bower install
 ```
 
+## HTTP server
+
+create certs for the http server:
+```
+openssl req -x509 -newkey rsa:2048 -keyout key.pem -out cert.pem -days 365 -nodes
+```
+
+
 start http server to serer lxd-webgui:
-
 ```
-http-server -a localhost -p 8000
+http-server -S -a localhost -p 8000 
 ```
 
-# lxd configuration
+## lxd configuration
 
-##  certs
+###  certs
 
 Create a self-signed cert to authenticate to LXD:
 
 ```
-openssl req -x509 -newkey rsa:2048 -keyout key.pem -out cert.pem -days 365 -nodes
+$ cd ~/
+$ mkdir lxc-cert
+$ cd lxc-cert
+$ openssl req -x509 -newkey rsa:2048 -keyout key.pem -out cert.pem -days 365 -nodes
 ```
+Content of certificate (CN, AU etc.) does not matter. 
 
 Convert cert to pkcs12:
 ```
 openssl pkcs12 -export -out cert.p12 -inkey key.pem -in cert.pem
 ```
 
-## lxd configuration
-
-Configure LXD to listen to localhost on port 9000, and allow access from localhost port 8000. Also add cert to the trusted certs for lxd. We also have to configure LXD to accept the PUT, DELETE and OPTIONS HTTP headers, and fix allowed headers to  include "Content-Type".
-
+Now, add the PKCS12 cert.p12 to your browser:
 ```
-lxc config trust add cert.pem
-lxc config set core.https_address 127.0.0.1:9000
-lxc config set core.https_allowed_origin https://localhost:8000
-lxc config set core.https_allowed_methods "GET, POST, PUT, DELETE, OPTIONS"
-lxc config set core.https_allowed_headers "Origin, X-Requested-With, Content-Type, Accept"
+ Chrome: "Settings" -> "Manage Certificates" ->  "import" -> select the .p12 from above
 ```
 
-## browser configuration
+### lxd configuration
 
-Now, add the PKCS12 cert.p12 to your browser (Chrome: Settings import certificate)
+Configure LXD to listen to localhost on port 9000, and allow access from localhost port 8000. 
+Also add cert to the trusted certs for lxd. We also have to configure LXD to accept the PUT, DELETE and OPTIONS HTTP headers, and fix allowed headers to  include "Content-Type".
+Afterwards, we NEED to restart it atm. 
+
+```
+$ sudo lxc config trust add cert.pem
+sudo lxc config set core.https_address 127.0.0.1:9000
+sudo lxc config set core.https_allowed_origin https://localhost:8000
+sudo lxc config set core.https_allowed_methods "GET, POST, PUT, DELETE, OPTIONS"
+sudo lxc config set core.https_allowed_headers "Origin, X-Requested-With, Content-Type, Accept"
+$ sudo lxd restart
+```
 
 
-# debugging
+### debugging
 
 try to access lxd-gui: https://localhost:8000
 
 try to access lxd: https://localhost:9000
+
 
 
 
