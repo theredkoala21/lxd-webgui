@@ -54,10 +54,10 @@ angular.module('myApp.image')
                 obj.addRemoteImage = function(url) {
                     var data = {
                         "public": true,
-                        "filename": "test",
-                        "properties": {
+                        //"filename": "test",
+                        /*"properties": {
                             "os": "Ubuntu"
-                        },
+                        },*/
                         "source": {
                             "type": "url",
                             "url": url
@@ -71,22 +71,16 @@ angular.module('myApp.image')
                 }
 
 
-                obj.addSourceImage = function(url) {
+                obj.addSourceImage = function(fingerprint) {
                     var data = {
-//                    "filename": filename,               // Used for export (optional)
                     "public": true,                         //# Whether the image can be downloaded by untrusted users (defaults to false)
 //                    "auto_update": true,                    //# Whether the image should be auto-updated (optional; defaults to false)
-//                    "properties": {                         //# Image properties (optional, applied on top of source properties)
-//                        "os": "Ubuntu"
-//                    },
                     "source": {
                         "type": "image",
                         "mode": "pull",                     //# Only pull is supported for now
                         "server": "https://cloud-images.ubuntu.com/releases",  //# Remote server (pull mode only)
                         "protocol": "simplestreams",                  //# Protocol (one of lxd or simplestreams, defaults to lxd)
-//                        "secret": "my-secret-string",      // # Secret (pull mode only, private images only)
-//                        "certificate": "PEM certificate",   //# Optional PEM certificate. If not mentioned, system CA is used.
-                        "fingerprint": "3f5e2f5074c2",            //# Fingerprint of the image (must be set if alias isn't)
+                        "fingerprint": fingerprint,            //# Fingerprint of the image (must be set if alias isn't)
 //                        "alias": "ubuntu/devel",            //# Name of the alias (must be set if fingerprint isn't)
                         }
                     }

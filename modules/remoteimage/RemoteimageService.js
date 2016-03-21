@@ -7,17 +7,15 @@ angular.module('myApp.remoteimage')
 
             obj.downloadRemoteimageList = function () {
                 return $http.get("/data/ubuntudata.json").then(function (data) {
-                    console.log("B");
-
                     var results = [];
+
+                    var baseUrl = "https://cloud-images.ubuntu.com/releases/";
 
                     data = data.data;
 
                     // Inefficient implementation of parsing the strem data
                     for (var product in data.products) {
                         var productData = data.products[product];
-
-                        //console.log("A: " + productData.arch);
 
                         for (var shortdesc in productData) {
                             var shortData = productData[shortdesc];
@@ -38,6 +36,7 @@ angular.module('myApp.remoteimage')
                                             product: product,
                                             size: itemData.size,
                                             path: itemData.path,
+                                            url: baseUrl + itemData.path,
                                             sha256: itemData.sha256,
                                             pubname: versionData.pubname,
                                             combined_sha256: itemData.combined_sha256,

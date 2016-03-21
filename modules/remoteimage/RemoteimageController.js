@@ -32,13 +32,23 @@ angular.module('myApp.remoteimage', ['ngRoute'])
     }])
 
 
-    .controller('remoteimageViewCtrl', function ($scope, $routeParams, $filter, $location, remoteimages, RemoteimageServices) {
+    .controller('remoteimageViewCtrl', function ($scope, $routeParams, $filter, $location,
+                                                 remoteimages, RemoteimageServices, ImageServices) {
         $scope.remoteimages = remoteimages.data;
+
     })
 
     .controller('remoteimageListCtrl', function ($scope, $routeParams, $filter, $location,
-                                           RemoteimageServices, remoteimages) {
+                                                RemoteimageServices, remoteimages, ImageServices) {
         $scope.remoteimages = remoteimages;
+
+
+        $scope.addRemoteimage = function (remoteimage) {
+            console.log("URL: " + remoteimage.url);
+            //console.log("Fingerprint: " + remoteimage.combined_sha256 + "AA");
+            //ImageServices.addRemoteImage(remoteimage.url);
+            ImageServices.addSourceImage(remoteimage.combined_sha256);
+        }
     })
 
     .controller('remoteimageAddRemoteCtrl', function ($scope, $routeParams, $filter, $location, RemoteimageServices) {
