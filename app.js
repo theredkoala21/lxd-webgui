@@ -9,6 +9,7 @@ angular.module('myApp', [
 
   'myApp.container',
   'myApp.image',
+  'myApp.remoteimage',
   'myApp.network',
 ]).
 

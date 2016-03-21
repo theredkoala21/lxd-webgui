@@ -130,5 +130,9 @@ angular.module('myApp.container', ['ngRoute'])
         $scope.createContainer = function () {
             ContainerServices.create($scope.container, $scope.selectedImage);
         }
+
+        $scope.createContainer2 = function () {
+            ContainerServices.create2($scope.container, $scope.selectedImage);
+        }
     })
 ;

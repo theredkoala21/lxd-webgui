@@ -51,7 +51,14 @@ angular.module('myApp.container')
                     type: "image",
                     fingerprint: imageData.fingerprint
                 };
-                console.log("C: " + JSON.stringify(containerData));
+                return $http.post('https://localhost:9000/1.0/containers', containerData);
+            }
+
+            obj.createFromAlias = function (containerData, imageData) {
+                containerData.source = {
+                    type: "image",
+                    alias: "ubuntu/16.04"
+                };
                 return $http.post('https://localhost:9000/1.0/containers', containerData);
             }
 
