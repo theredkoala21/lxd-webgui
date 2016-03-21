@@ -4,11 +4,11 @@ angular.module('myApp.remoteimage', ['ngRoute'])
     .config(['$routeProvider', function ($routeProvider) {
         $routeProvider.when('/remoteimages', {
             title: 'Remoteimages',
-            templateUrl: 'modules/remoteimages/remoteimages.html',
+            templateUrl: 'modules/remoteimage/remoteimages.html',
             controller: 'remoteimageListCtrl',
             resolve: {
                 remoteimages: function (RemoteimageServices, $route) {
-                    return RemoteimageServices.getAll();
+                    return RemoteimageServices.downloadRemoteimageList();
                 }
             }
         })
@@ -22,7 +22,7 @@ angular.module('myApp.remoteimage', ['ngRoute'])
                 }
             }
         })
-        .when('/remoteimage-add-remote', {
+        .when('/remoteimage-add', {
             title: 'Remoteimages',
             templateUrl: 'modules/remoteimage/image-add-remote.html',
             controller: 'remoteimageAddRemoteCtrl',
@@ -32,8 +32,8 @@ angular.module('myApp.remoteimage', ['ngRoute'])
     }])
 
 
-    .controller('remoteimageViewCtrl', function ($scope, $routeParams, $filter, $location, image, RemoteimageServices) {
-        $scope.image = image.data.metadata;
+    .controller('remoteimageViewCtrl', function ($scope, $routeParams, $filter, $location, remoteimages, RemoteimageServices) {
+        $scope.remoteimages = remoteimages.data;
     })
 
     .controller('remoteimageListCtrl', function ($scope, $routeParams, $filter, $location,

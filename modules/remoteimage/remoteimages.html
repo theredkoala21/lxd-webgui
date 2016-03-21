@@ -1,1 +1,39 @@
-XXX
+<div class="row">
+
+    <div class="col-md-12" ng-show="remoteimages.length > 0">
+        <table class="table table-condensed">
+            <thead>
+            <th class="col-md-2">Hash</th>
+            <th class="col-md-5">Pubname</th>
+            <th class="col-md-5">Details</th>
+            <th class="col-md-1">Action</th>
+            </thead>
+
+            <tbody>
+            <tr ng-repeat="remoteimage in remoteimages">
+                <td>
+                    <b>{{remoteimage.sha256 | limitTo:12}}</b>
+                </td>
+
+                <td>
+                    {{remoteimage.pubname}}
+                </td>
+
+                <td>
+                    {{remoteimage.arch}} / {{remoteimage.version}}
+                </td>
+
+                <td>
+                    <a class="btn btn-sm btn-primary" href="#/network-view/{{network.name}}"><i class="glyphicon glyphicon-plus"></i>Add</a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="col-md-12" ng-show="networks.length == 0">
+        <div class="col-md-12">
+            <h4>No Containers</h4>
+        </div>
+    </div>
+</div>
