@@ -1,0 +1,22 @@
+<div class="row">
+    <div class="col-md-12" ng-show="operations.length > 0">
+        <table class="table table-condensed">
+            <thead>
+            <th class="col-md-4">Name</th>
+            <th class="col-md-3">Metadata</th>
+            </thead>
+
+            <tbody>
+                <tr ng-repeat="operation in operations">
+                    <td>
+                        <b>{{operation.id}}</b>
+                    </td>
+
+                    <td>
+                      Download: {{operation.metadata.download_progress}}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

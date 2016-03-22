@@ -91,11 +91,6 @@ angular.module('myApp.image')
                     });
                 }
 
-                obj.downloadImageList = function() {
-
-                }
-
-
                 return obj;
             }])
 ;

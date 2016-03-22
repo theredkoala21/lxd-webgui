@@ -11,6 +11,7 @@ angular.module('myApp', [
   'myApp.image',
   'myApp.remoteimage',
   'myApp.network',
+  'myApp.operation'
 ]).
 
 config(['$routeProvider', function($routeProvider) {
