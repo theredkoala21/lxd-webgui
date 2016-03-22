@@ -6,7 +6,11 @@ backend services. Just serve the static HTML and JS files.
 
 # Status
 
-This software is pre-alpha.
+This software is alpha.
+
+# Screenshot
+
+![Screenshot](/doc/screenshot-overview.png?raw=true "Screenshot")
 
 # installation
 
@@ -15,7 +19,7 @@ This software is pre-alpha.
 install lxd as described here:
  - https://linuxcontainers.org/lxd/getting-started-cli/
  - https://www.stgraber.org/2016/03/15/lxd-2-0-installing-and-configuring-lxd-212/
- 
+
 My lxd init looks like this:
 ```
 $ sudo lxd init
@@ -55,7 +59,7 @@ lxd-webgui$ openssl req -x509 -newkey rsa:2048 -keyout key.pem -out cert.pem -da
 
 start http server to serve lxd-webgui:
 ```
-lxd-webgui$ http-server -S -a localhost -p 8000 
+lxd-webgui$ http-server -S -a localhost -p 8000
 ```
 
 ## lxd configuration
@@ -70,7 +74,7 @@ $ mkdir lxc-cert
 $ cd lxc-cert
 $ openssl req -x509 -newkey rsa:2048 -keyout key.pem -out cert.pem -days 365 -nodes
 ```
-Content of certificate (CN, AU etc.) does not matter. 
+Content of certificate (CN, AU etc.) does not matter.
 
 Convert cert to pkcs12:
 ```
@@ -84,9 +88,9 @@ Now, add the PKCS12 cert.p12 to your browser:
 
 ### lxd configuration
 
-Configure LXD to listen to localhost on port 9000, and allow access from localhost port 8000. 
+Configure LXD to listen to localhost on port 9000, and allow access from localhost port 8000.
 Also add cert to the trusted certs for lxd. We also have to configure LXD to accept the PUT, DELETE and OPTIONS HTTP headers, and fix allowed headers to  include "Content-Type".
-Afterwards, we NEED to restart it atm. 
+Afterwards, we NEED to restart it atm.
 
 ```
 $ sudo lxc config trust add cert.pem
@@ -112,5 +116,4 @@ try to access lxd: https://localhost:9000
 Do not let any other application run on the same domain+port as lxd-gui.
 
 
-There is no CSRF protection for the LXD REST service. 
-
+There is no CSRF protection for the LXD REST service.
