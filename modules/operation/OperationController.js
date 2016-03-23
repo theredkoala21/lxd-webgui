@@ -25,13 +25,31 @@ angular.module('myApp.operation', ['ngRoute'])
         ;
     }])
 
-    .controller('operationHeaderCtrl', function ($scope, $routeParams, $filter, $location,
+
+    .controller('operationHeaderCtrl', function ($scope, $routeParams, $filter, $location, $interval,
       OperationServices) {
 
-        OperationServices.getAll().then(function(data) {
-          $scope.operations = data;
-        });
+        $interval(
+          function() { $scope.refresh(); }, 3000
+        );
+
+        $scope.refresh = function() {
+          OperationServices.getAll().then(function(data) {
+            var res = [];
+
+            if (data instanceof Array && ! _.isEmpty(data)) {
+              data.forEach(function(d) {
+                if (d.class != "websocket") {
+                  res.push(d);
+                }
+              });
+            }
+
+            $scope.operations = res;
+          });
+        }
     })
+
 
     .controller('operationViewCtrl', function ($scope, $routeParams, $filter, $location, operation, OperationServices) {
         $scope.operation = operation.data.metadata;

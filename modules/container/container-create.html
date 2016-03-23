@@ -1,19 +1,15 @@
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-5">
         <table class="table table-condensed">
             <tbody>
             <tr>
                 <td> Name</td>
-                <td><input ng-model="container.name" type="text" value="{{container.name}}"></td>
-            </tr>
-
-            <tr>
-                <td> Ephemeral</td>
-                <td> {{container.ephemeral}}</td>
-            </tr>
-            <tr>
-                <td> Stateful</td>
-                <td> {{container.stateful}}</td>
+                <td>
+                  <input ng-model="container.name"
+                  type="text"
+                  value="{{container.name}}"
+                  size="32">
+                </td>
             </tr>
 
             <tr>
@@ -21,17 +17,23 @@
                 <td> {{selectedImage.fingerprint | limitTo:12}}</td>
             </tr>
 
+
+            <tr>
+                <td> Ephemeral</td>
+                <td> {{container.ephemeral}}</td>
+            </tr>
+
+            <tr>
+                <td> Stateful</td>
+                <td> {{container.stateful}}</td>
+            </tr>
+
+
             <tr>
                 <td>
                     <a class="btn btn-sm btn-primary" ng-click="createContainer()">
                         <i class="glyphicon glyphicon-add">Add</i>
                     </a>
-                    <a class="btn btn-sm btn-primary" ng-click="createContainer2()">
-                        <i class="glyphicon glyphicon-add">Add2</i>
-                    </a>
-                </td>
-                <td>
-
                 </td>
             </tr>
 
@@ -39,15 +41,12 @@
         </table>
     </div>
 
-    <div class="col-md-5">
+    <div class="col-md-7">
         Images:
         <table class="table table-condensed">
 
             <tbody>
             <tr ng-repeat="image in images">
-                <td>
-                    <input type="checkbox" ng-model="s">
-                </td>
                 <td>
                     {{image.fingerprint | limitTo: 12}}
                 </td>

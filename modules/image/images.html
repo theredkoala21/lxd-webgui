@@ -1,14 +1,12 @@
 <div class="row">
-  <a class="btn btn-sm btn-success" href="#/image-add-remote"><i class="glyphicon glyphicon-plus"></i>Add Remote Image</a>
 
     <div class="col-md-12" ng-show="images.length > 0">
 
         <table class="table table-condensed">
             <thead>
-            <th class="col-md-3">Hash</th>
-            <th class="col-md-3">Description</th>
-            <th class="col-md-3">Filename</th>
-            <th class="none">Action</th>
+            <th>Hash</th>
+            <th>Description</th>
+            <th>Action</th>
             </thead>
 
             <tbody>
@@ -19,10 +17,6 @@
 
                     <td>
                       {{image.properties.description}}
-                    </td>
-
-                    <td>
-                      {{image.filename}}
                     </td>
 
                     <td>

@@ -7,13 +7,46 @@ angular.module('myApp', [
   'ui.bootstrap',
   'ngSanitize',
 
+  'autoActive',
+
   'myApp.container',
   'myApp.image',
   'myApp.remoteimage',
   'myApp.network',
-  'myApp.operation'
+  'myApp.operation',
+  'myApp.terminal'
 ]).
 
 config(['$routeProvider', function($routeProvider) {
-  $routeProvider.otherwise({redirectTo: '/view1'});
+  $routeProvider.otherwise({redirectTo: '/home'});
 }]);
+
+
+// To highlight current menu entry
+// Source: http://stackoverflow.com/questions/12592472/how-to-highlight-a-current-menu-item
+angular.module('autoActive', [])
+        .directive('autoActive', ['$location', function ($location) {
+        return {
+            restrict: 'A',
+            scope: false,
+            link: function (scope, element) {
+                function setActive() {
+                    var path = $location.path();
+                    if (path) {
+                        angular.forEach(element.find('li'), function (li) {
+                            var anchor = li.querySelector('a');
+                            if (anchor.href.match('#' + path + '(?=\\?|$)')) {
+                                angular.element(li).addClass('active');
+                            } else {
+                                angular.element(li).removeClass('active');
+                            }
+                        });
+                    }
+                }
+
+                setActive();
+
+                scope.$on('$locationChangeSuccess', setActive);
+            }
+        }
+    }]);
