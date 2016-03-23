@@ -5,7 +5,58 @@ angular.module('myApp.remoteimage')
         function ($http, $q) {
             var obj = {};
 
-            obj.downloadRemoteimageList = function () {
+            obj.downloadRemoteimageListImages = function() {
+              var url = "https://images.linuxcontainers.org/";
+
+              return $http.get("https://images.linuxcontainers.org/1.0/images").then(function(data) {
+
+                var promises = data.data.metadata.map(function(imageUrl) {
+                    return $http.get(url + imageUrl).then(function(resp) {
+                      resp.data.metadata.source = 'images';
+                      resp.data.metadata.sourceUrl = url;
+                      resp.data.metadata.sourceProto = 'lxd';
+                      return resp.data.metadata;
+                    });
+                });
+
+                return $q.all(promises);
+              })
+            }
+
+
+            obj.downloadRemoteimageListImages_bak = function() {
+              return $http.get("/data/index-user.txt").then(function(data) {
+                var baseUrl = "https://images.linuxcontainers.org/";
+                var baseImageName = "rootfs.tar.xz";
+
+                data = data.data;
+
+                var results = [];
+                var dataArr = data.split('\n');
+                dataArr.forEach(function(line) {
+                  var entry = line.split(";");
+                  if (entry.length == 6) {
+                    var entryHash = {
+                      source: 'images',
+                      os: entry[0],
+                      release: entry[1],
+                      arch: entry[2],
+                      unkown: entry[3],
+                      date: entry[4],
+                      path: entry[5],
+                      url: baseUrl + entry[5] + baseImageName,
+                      pubname: entry[0] + " " + entry[1] + " / " + entry[4],
+                    }
+
+                    results.push(entryHash);
+                  }
+                });
+
+                return results;
+              })
+            }
+
+            obj.downloadRemoteimageListUbuntu = function () {
                 return $http.get("/data/ubuntudata.json").then(function (data) {
                     var results = [];
 
@@ -28,6 +79,10 @@ angular.module('myApp.remoteimage')
                                         var itemData = versionData.items[item];
 
                                         var entry = {
+                                            sourceUrl: baseUrl,
+                                            sourceProto: 'simplestreams',
+                                            source: 'ubuntu',
+                                            os: "ubuntu",
                                             arch: productData.arch,
                                             release_title: productData.release_title,
                                             release_codename: productData.release_codename,
@@ -40,6 +95,13 @@ angular.module('myApp.remoteimage')
                                             sha256: itemData.sha256,
                                             pubname: versionData.pubname,
                                             combined_sha256: itemData.combined_sha256,
+
+                                            // compatibility
+                                            fingerprint: itemData.combined_sha256,
+                                            architecture: productData.arch,
+                                            properties: {
+                                              description: productData.release_title + " " + productData.release_codename + " " + productData.release,
+                                            }
                                         }
 
                                         results.push(entry);
@@ -56,6 +118,15 @@ angular.module('myApp.remoteimage')
 
             }
 
+
+            obj.getAll = function() {
+              var requests = [];
+
+              requests.push(obj.downloadRemoteimageListUbuntu());
+              requests.push(obj.downloadRemoteimageListImages());
+
+              return $q.all(requests);
+            }
 
             return obj;
         }])

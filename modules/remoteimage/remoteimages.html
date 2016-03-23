@@ -7,24 +7,27 @@
     <div class="col-md-12" ng-show="remoteimages.length > 0">
         <table class="table table-condensed">
             <thead>
+            <th class="col-md-4">Desc</th>
+            <th class="col-md-1">Arch</th>
             <th class="col-md-2">Hash</th>
-            <th class="col-md-5">Pubname</th>
-            <th class="col-md-5">Details</th>
+            <th class="col-md-1">Source</th>
             <th class="col-md-1">Action</th>
             </thead>
 
             <tbody>
             <tr ng-repeat="remoteimage in remoteimages">
-                <td>
-                    <b>{{remoteimage.sha256 | limitTo:12}}</b>
+                <td>{{remoteimage.properties.description}}
                 </td>
 
                 <td>
-                    {{remoteimage.pubname}}
+                    {{remoteimage.architecture}}
                 </td>
 
                 <td>
-                    {{remoteimage.arch}} / {{remoteimage.version}}
+                    {{remoteimage.fingerprint | limitTo: 12}}
+                </td>
+
+                <td> {{remoteimage.source}}
                 </td>
 
                 <td>

@@ -47,7 +47,7 @@ angular.module('myApp.image', ['ngRoute'])
         }
 
         $scope.addSourceImage = function () {
-            ImageServices.addSourceImage();
+            ImageServices.addSourceImage2();
         }
     })
 ;

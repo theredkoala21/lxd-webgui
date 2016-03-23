@@ -51,18 +51,38 @@ angular.module('myApp.image')
                   });
                 }
 
+
                 obj.addRemoteImage = function(url) {
                     var data = {
                         "public": true,
-                        //"filename": "test",
-                        /*"properties": {
-                            "os": "Ubuntu"
-                        },*/
                         "source": {
                             "type": "url",
                             "url": url
                         }
                     };
+
+                    $http.post('https://localhost:9000/1.0/images', data).then(function(data) {
+                        var opUrl = data.data.operation;
+                        $http.get('https://localhost:9000' + opUrl);
+                    });
+                }
+
+
+                obj.addSourceImageRepo = function(remoteimage) {
+                    var data = {
+                    "public": true,                         //# Whether the image can be downloaded by untrusted users (defaults to false)
+//                    "auto_update": true,                    //# Whether the image should be auto-updated (optional; defaults to false)
+                    "source": {
+                        "type": "image",
+                        "mode": "pull",                     //# Only pull is supported for now
+                        "server": remoteimage.sourceUrl,  //# Remote server (pull mode only)
+                        "protocol": remoteimage.sourceProto,                  //# Protocol (one of lxd or simplestreams, defaults to lxd)
+                        "fingerprint": remoteimage.fingerprint,            //# Fingerprint of the image (must be set if alias isn't)
+//                        "alias": "ubuntu/devel",            //# Name of the alias (must be set if fingerprint isn't)
+                        }
+                    }
+
+                    console.log("A :" + JSON.stringify(remoteimage));
 
                     $http.post('https://localhost:9000/1.0/images', data).then(function(data) {
                         var opUrl = data.data.operation;
@@ -90,6 +110,30 @@ angular.module('myApp.image')
                         $http.get('https://localhost:9000' + opUrl);
                     });
                 }
+
+
+
+                obj.addSourceImage2 = function(fingerprint) {
+                  console.log("New2");
+                    var data = {
+                    "public": true,                         //# Whether the image can be downloaded by untrusted users (defaults to false)
+//                    "auto_update": true,                    //# Whether the image should be auto-updated (optional; defaults to false)
+                    "source": {
+                        "type": "image",
+                        "mode": "pull",                     //# Only pull is supported for now
+                        "server": "https://images.linuxcontainers.org/",  //# Remote server (pull mode only)
+                        "protocol": "lxd",                  //# Protocol (one of lxd or simplestreams, defaults to lxd)
+                        "fingerprint": "76c57848218b",            //# Fingerprint of the image (must be set if alias isn't)
+                        //"alias": "ubuntu/devel",            //# Name of the alias (must be set if fingerprint isn't)
+                        }
+                    }
+
+                    $http.post('https://localhost:9000/1.0/images', data).then(function(data) {
+                        var opUrl = data.data.operation;
+                        $http.get('https://localhost:9000' + opUrl);
+                    });
+                }
+
 
                 return obj;
             }])

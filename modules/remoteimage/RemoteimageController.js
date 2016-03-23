@@ -8,7 +8,7 @@ angular.module('myApp.remoteimage', ['ngRoute'])
             controller: 'remoteimageListCtrl',
             resolve: {
                 remoteimages: function (RemoteimageServices, $route) {
-                    return RemoteimageServices.downloadRemoteimageList();
+                    return RemoteimageServices.getAll();
                 }
             }
         })
@@ -40,14 +40,11 @@ angular.module('myApp.remoteimage', ['ngRoute'])
 
     .controller('remoteimageListCtrl', function ($scope, $routeParams, $filter, $location,
                                                 RemoteimageServices, remoteimages, ImageServices) {
-        $scope.remoteimages = remoteimages;
-
+        $scope.remoteimages = [];
+        $scope.remoteimages = remoteimages[0].concat(remoteimages[1]);
 
         $scope.addRemoteimage = function (remoteimage) {
-            console.log("URL: " + remoteimage.url);
-            //console.log("Fingerprint: " + remoteimage.combined_sha256 + "AA");
-            //ImageServices.addRemoteImage(remoteimage.url);
-            ImageServices.addSourceImage(remoteimage.combined_sha256);
+          ImageServices.addSourceImageRepo(remoteimage);
         }
     })
 
