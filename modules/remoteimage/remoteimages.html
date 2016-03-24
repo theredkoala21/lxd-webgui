@@ -1,5 +1,30 @@
 <div class="row">
   <a class="btn btn-sm btn-success" href="#/image-add-remote"><i class="glyphicon glyphicon-plus"></i>Add Remote Image</a>
+
+
+  <div class="col-md-3">
+         <input type="text" class="form-control" id="b"
+          name="filterSearch"
+          ng-model="filter.search"
+          ng-blur="reload()"
+          placeholder="Search">
+   </div>
+
+   <div class="col-md-3">
+
+   <ui-select ng-change="reload()"
+    ng-model="filter.architecture"
+    ng-disabled="disabled"
+    title="Architecture">
+       <ui-select-match allow-clear placeholder="Architecture">
+         {{filter.architecture}}
+       </ui-select-match>
+       <ui-select-choices repeat="architecture in architectures">
+           <div ng-bind-html="architecture | highlight: filter.architecture"></div>
+       </ui-select-choices>
+   </ui-select>
+ </div>
+
 </div>
 
 

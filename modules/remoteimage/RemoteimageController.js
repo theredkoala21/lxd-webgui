@@ -34,16 +34,31 @@ angular.module('myApp.remoteimage', ['ngRoute'])
 
 
     .controller('remoteimageListCtrl', function ($scope, $routeParams, $filter, $location,
-                                                RemoteimageServices, ImageServices) {
+                                                RemoteimageServices, ImageServices)
+    {
+        $scope.remoteimages = [];
+        $scope.filter = {
+          search: '',
+        };
+        $scope.architectures = [
+          'amd64',
+          'i386',
+          'armhf',
+          'arm64',
+          'ppc64el',
+        ];
 
-        RemoteimageServices.getAll().then(function(data) {
-          $scope.remoteimages = [];
-          $scope.remoteimages = data[0].concat(data[1]);
-        })
+        $scope.reload = function() {
+          RemoteimageServices.getByFilter($scope.filter).then(function(data) {
+            $scope.remoteimages = data[0].concat(data[1]);
+          })
+        }
 
         $scope.addRemoteimage = function (remoteimage) {
           ImageServices.addSourceImageRepo(remoteimage);
         }
+
+        $scope.reload();
     })
 
 

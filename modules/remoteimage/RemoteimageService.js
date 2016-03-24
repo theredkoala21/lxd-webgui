@@ -1,17 +1,17 @@
 'use strict';
 
 angular.module('myApp.remoteimage')
-    .factory('RemoteimageServices', ['$http', '$q',
-        function ($http, $q) {
+    .factory('RemoteimageServices', ['$http', '$q', '$cacheFactory',
+        function ($http, $q, $cacheFactory) {
             var obj = {};
 
             obj.downloadRemoteimageListImages = function() {
               var url = "https://images.linuxcontainers.org/";
 
-              return $http.get("https://images.linuxcontainers.org/1.0/images").then(function(data) {
+              return $http.get("https://images.linuxcontainers.org/1.0/images", {cache: true}).then(function(data) {
 
                 var promises = data.data.metadata.map(function(imageUrl) {
-                    return $http.get(url + imageUrl).then(function(resp) {
+                    return $http.get(url + imageUrl, {cache: true}).then(function(resp) {
                       resp.data.metadata.source = 'images';
                       resp.data.metadata.sourceUrl = url;
                       resp.data.metadata.sourceProto = 'lxd';
@@ -25,7 +25,7 @@ angular.module('myApp.remoteimage')
 
 
             obj.downloadRemoteimageListImages_bak = function() {
-              return $http.get("/data/index-user.txt").then(function(data) {
+              return $http.get("/data/index-user.txt", {cache: true}).then(function(data) {
                 var baseUrl = "https://images.linuxcontainers.org/";
                 var baseImageName = "rootfs.tar.xz";
 
@@ -57,7 +57,7 @@ angular.module('myApp.remoteimage')
             }
 
             obj.downloadRemoteimageListUbuntu = function () {
-                return $http.get("/data/ubuntudata.json").then(function (data) {
+                return $http.get("/data/ubuntudata.json", {cache: true}).then(function (data) {
                     var results = [];
 
                     var baseUrl = "https://cloud-images.ubuntu.com/releases/";
@@ -119,13 +119,78 @@ angular.module('myApp.remoteimage')
             }
 
 
+            obj.cacheData = {
+              isCached: false,
+            };
+
+
+            obj.getByFilter = function(filter) {
+              //return obj.getAll();
+
+              return obj.getAll().then(function(data) {
+                if ( _.isEmpty(filter)) {
+                  return data;
+                }
+
+                var d = $q.defer();
+
+                var results = [];
+
+                for(var n=0; n<2; n++) {
+
+
+                  // wow this is fugly
+                  data[n].forEach(function(result) {
+                    if (filter.search) {
+                       if (result.properties.description.toLowerCase().indexOf(filter.search.toLowerCase()) > -1) {
+                         if (filter.architecture) {
+                           if (result.architecture == filter.architecture) {
+                             results.push(result);
+                           }
+                         } else {
+                           results.push(result);
+                         }
+                       }
+                    } else {
+                      if (filter.architecture) {
+                        if (result.architecture == filter.architecture) {
+                          results.push(result);
+                        }
+                      } else {
+                        results.push(result);
+                      }
+                    }
+                  });
+
+
+                }
+
+                d.resolve([ results ]);
+
+                return d.promise;
+              });
+            }
+
+
             obj.getAll = function() {
-              var requests = [];
+              if (obj.cacheData.isCached == true) {
+                console.log("cached");
+                return obj.cacheData.p;
+              } else {
+                console.log("not cached");
+                var requests = [];
 
-              requests.push(obj.downloadRemoteimageListUbuntu());
-              requests.push(obj.downloadRemoteimageListImages());
+                requests.push(obj.downloadRemoteimageListUbuntu());
+                requests.push(obj.downloadRemoteimageListImages());
 
-              return $q.all(requests);
+                var p =  $q.all(requests);
+
+                obj.cacheData.p = p;
+                obj.cacheData.isCached = true;
+
+                return p;
+              }
+
             }
 
             return obj;
