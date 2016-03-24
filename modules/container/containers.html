@@ -42,10 +42,10 @@
                 <td>
                     <a class="btn btn-sm btn-primary" href="#/container-view/{{container.name}}"><i
                             class="glyphicon glyphicon-edit"></i> View</a>
-                    <a class="btn btn-sm btn-info" href="#/terminal/{{container.name}}"><i
-                            class="glyphicon glyphicon-modal-window"></i> Terminal</a>
                     <a class="btn btn-sm btn-danger" ng-click="delete(container)"><i
                             class="glyphicon glyphicon-remove"></i> Delete</a>
+                    <a ng-show="container.status=='Running'" class="btn btn-sm btn-info" href="#/terminal/{{container.name}}"><i
+                            class="glyphicon glyphicon-modal-window"></i> Terminal</a>
                 </td>
             </tr>
             </tbody>

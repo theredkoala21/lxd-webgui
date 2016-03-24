@@ -39,6 +39,8 @@ angular.module('myApp.image', ['ngRoute'])
     .controller('imageListCtrl', function ($scope, $routeParams, $filter, $location,
                                            ImageServices, images) {
         $scope.images = images;
+
+        console.log("A: " + JSON.stringify(images));
     })
 
     .controller('imageAddRemoteCtrl', function ($scope, $routeParams, $filter, $location, ImageServices) {

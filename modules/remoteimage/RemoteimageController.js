@@ -51,6 +51,9 @@ angular.module('myApp.remoteimage', ['ngRoute'])
         $scope.reload = function() {
           RemoteimageServices.getByFilter($scope.filter).then(function(data) {
             $scope.remoteimages = data[0].concat(data[1]);
+            $scope.errorMsg = "";
+          }, function(error) {
+            $scope.errorMsg = "Connection error. Could not retrieve data.";
           })
         }
 

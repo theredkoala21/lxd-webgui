@@ -137,8 +137,6 @@ angular.module('myApp.remoteimage')
                 var results = [];
 
                 for(var n=0; n<2; n++) {
-
-
                   // wow this is fugly
                   data[n].forEach(function(result) {
                     if (filter.search) {
@@ -161,8 +159,6 @@ angular.module('myApp.remoteimage')
                       }
                     }
                   });
-
-
                 }
 
                 d.resolve([ results ]);

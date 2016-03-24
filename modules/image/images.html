@@ -6,6 +6,9 @@
             <thead>
             <th>Hash</th>
             <th>Description</th>
+            <th> OS </th>
+            <th>Architecture</th>
+            <th>Size</th>
             <th>Action</th>
             </thead>
 
@@ -18,6 +21,16 @@
                     <td>
                       {{image.properties.description}}
                     </td>
+
+                    <td>
+                      {{image.properties.os}} {{image.properties.release}} {{image.properties.version}} 
+                    </td>
+
+                    <td> {{image.architecture}}
+                    </td>
+
+
+                    <td> {{image.size}}</td>
 
                     <td>
                         <a class="btn btn-sm btn-primary" href="#/image-view/{{image.fingerprint}}"><i class="glyphicon glyphicon-zoom-in"></i>View</a>
