@@ -14,11 +14,12 @@ angular.module('myApp', [
   'myApp.remoteimage',
   'myApp.network',
   'myApp.operation',
-  'myApp.terminal'
+  'myApp.terminal',
+  'myApp.setting'
 ]).
 
 config(['$routeProvider', function($routeProvider) {
-  $routeProvider.otherwise({redirectTo: '/home'});
+  $routeProvider.otherwise({redirectTo: '/settings'});
 }]);
 
 

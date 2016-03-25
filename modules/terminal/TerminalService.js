@@ -1,8 +1,8 @@
 'use strict';
 
 angular.module('myApp.remoteimage')
-    .factory('TerminalServices', ['$http', '$q',
-        function ($http, $q) {
+    .factory('TerminalServices', ['$http', '$q', 'SettingServices',
+        function ($http, $q, SettingServices) {
             var obj = {};
 
             obj.getTerminal = function(containerName) {
@@ -17,7 +17,7 @@ angular.module('myApp.remoteimage')
                   "interactive": true
               }
 
-              return $http.post("https://localhost:9000/1.0/containers/" + containerName + "/exec", data).then(function(data) {
+              return $http.post(SettingServices.getLxdApiUrl() + '/containers/' + containerName + "/exec", data).then(function(data) {
                 var op = data.data.operation;
 
                 /*$http.get('https://localhost:9000' + op).then(function(data) {

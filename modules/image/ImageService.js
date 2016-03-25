@@ -1,13 +1,13 @@
 'use strict';
 
 angular.module('myApp.image')
-        .factory('ImageServices', ['$http', '$q',
-            function ($http, $q) {
+        .factory('ImageServices', ['$http', '$q', 'SettingServices',
+            function ($http, $q, SettingServices) {
               var obj = {};
 
                 // Get a Image
                 obj.getByFingerprint =  function (imageFingerprint) {
-                  return $http.get('https://localhost:9000/1.0/images/' + imageFingerprint)
+                  return $http.get(SettingServices.getLxdApiUrl() + '/images/' + imageFingerprint)
                   .then(function(data) {
                     //data.data = data.data.metadata;
                     return data;
@@ -16,17 +16,17 @@ angular.module('myApp.image')
 
                 // Get a image
                 obj.get = function (imageName) {
-                    return $http.get('https://localhost:9000/1.0/images/' + imageName);
+                    return $http.get(SettingServices.getLxdApiUrl() + '/images/' + imageName);
                 }
 
                 // Get a image
                 obj.getByUrl = function (imageUrl) {
-                    return $http.get('https://localhost:9000' + imageUrl);
+                    return $http.get(SettingServices.getLxdUrl() + imageUrl);
                 }
 
                 // Get all images
                 obj.getAll = function() {
-                    return $http.get('https://localhost:9000/1.0/images').then(function (data) {
+                    return $http.get(SettingServices.getLxdApiUrl() + '/images').then(function (data) {
                       data = data.data;
 
                       if (data.status != "Success") {
@@ -34,7 +34,7 @@ angular.module('myApp.image')
                       }
 
                       var promises = data.metadata.map(function(imageUrl) {
-                          return $http.get('https://localhost:9000' + imageUrl).then(function(resp) {
+                          return $http.get(SettingServices.getLxdUrl() + imageUrl).then(function(resp) {
                               return resp.data.metadata;
                           });
                       });
@@ -46,7 +46,7 @@ angular.module('myApp.image')
 
                 // Modify image:
                 obj.modify = function(imageName, imageData, callback) {
-                  $http.put('https://localhost:9000/1.0/images/' + imageName).success(function(data) {
+                  $http.put(SettingServices.getLxdApiUrl() + '/images/' + imageName).success(function(data) {
                     callback(data);
                   });
                 }
@@ -61,9 +61,9 @@ angular.module('myApp.image')
                         }
                     };
 
-                    $http.post('https://localhost:9000/1.0/images', data).then(function(data) {
+                    $http.post(SettingServices.getLxdApiUrl() + '/images', data).then(function(data) {
                         var opUrl = data.data.operation;
-                        $http.get('https://localhost:9000' + opUrl);
+                        $http.get(SettingServices.getLxdUrl() + opUrl);
                     });
                 }
 
@@ -82,9 +82,9 @@ angular.module('myApp.image')
                         }
                     }
 
-                    $http.post('https://localhost:9000/1.0/images', data).then(function(data) {
+                    $http.post(SettingServices.getLxdApiUrl() + '/images', data).then(function(data) {
                         var opUrl = data.data.operation;
-                        $http.get('https://localhost:9000' + opUrl);
+                        $http.get(SettingServices.getLxdUrl() + opUrl);
                     });
                 }
 
@@ -103,9 +103,9 @@ angular.module('myApp.image')
                         }
                     }
 
-                    $http.post('https://localhost:9000/1.0/images', data).then(function(data) {
+                    $http.post(SettingServices.getLxdApiUrl() + '/images', data).then(function(data) {
                         var opUrl = data.data.operation;
-                        $http.get('https://localhost:9000' + opUrl);
+                        $http.get(SettingServices.getLxdUrl() + opUrl);
                     });
                 }
 
@@ -125,9 +125,9 @@ angular.module('myApp.image')
                         }
                     }
 
-                    $http.post('https://localhost:9000/1.0/images', data).then(function(data) {
+                    $http.post(SettingServices.getLxdApiUrl() + '/images', data).then(function(data) {
                         var opUrl = data.data.operation;
-                        $http.get('https://localhost:9000' + opUrl);
+                        $http.get(SettingServices.getLxdUrl() + opUrl);
                     });
                 }
 

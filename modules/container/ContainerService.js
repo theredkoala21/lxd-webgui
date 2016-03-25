@@ -1,22 +1,22 @@
 'use strict';
 
 angular.module('myApp.container')
-    .factory('ContainerServices', ['$http', '$q', '$timeout',
-        function ($http, $q, $timeout) {
+    .factory('ContainerServices', ['$http', '$q', '$timeout', 'SettingServices',
+        function ($http, $q, $timeout, SettingServices) {
             var obj = {};
 
             obj.isOperationFinished = function (operationID) {
-                return $http.get('https://localhost:9000/1.0/operations' + operationID);
+                return $http.get(SettingServices.getLxdApiUrl() + '/operations' + operationID);
             }
 
             // Get a container
             obj.getByName = function (containerName) {
-                return $http.get('https://localhost:9000/1.0/containers/' + containerName);
+                return $http.get(SettingServices.getLxdApiUrl() + '/containers/' + containerName);
             }
 
             // Get a container
             obj.getByUrl = function (containerUrl, callback) {
-                $http.get('https://localhost:9000' + containerUrl).success(function (data) {
+                $http.get(SettingServices.getLxdUrl() + containerUrl).success(function (data) {
                     callback(data);
                 });
             }
@@ -24,7 +24,7 @@ angular.module('myApp.container')
 
             // Get all containers
             obj.getAll = function () {
-                return $http.get('https://localhost:9000/1.0/containers').then(function (data) {
+                return $http.get(SettingServices.getLxdApiUrl() + '/containers').then(function (data) {
                     // {"type":"sync","status":"Success","status_code":200,
                     // "metadata":["/1.0/containers/hacking"]}
                     data = data.data;
@@ -35,7 +35,7 @@ angular.module('myApp.container')
 
 
                     var promises = data.metadata.map(function (containerUrl) {
-                        return $http.get('https://localhost:9000' + containerUrl).then(function (resp) {
+                        return $http.get(SettingServices.getLxdUrl() + containerUrl).then(function (resp) {
                             return resp.data.metadata;
                         });
                     });
@@ -51,7 +51,7 @@ angular.module('myApp.container')
                     type: "image",
                     fingerprint: imageData.fingerprint
                 };
-                return $http.post('https://localhost:9000/1.0/containers', containerData);
+                return $http.post(SettingServices.getLxdApiUrl() + '/containers', containerData);
             }
 
             obj.createFromAlias = function (containerData, imageData) {
@@ -59,7 +59,7 @@ angular.module('myApp.container')
                     type: "image",
                     alias: "ubuntu/16.04"
                 };
-                return $http.post('https://localhost:9000/1.0/containers', containerData);
+                return $http.post(SettingServices.getLxdApiUrl() + '/containers', containerData);
             }
 
 
@@ -68,7 +68,7 @@ angular.module('myApp.container')
                 delete containerData['name'];
                 delete containerData['status'];
 
-                $http.put('https://localhost:9000/1.0/containers/' + containerName, containerData).success(function (data) {
+                $http.put(SettingServices.getLxdApiUrl() + '/containers/' + containerName, containerData).success(function (data) {
                     callback(data);
                 });
             }
@@ -76,13 +76,13 @@ angular.module('myApp.container')
 
             // Rename  a container
             obj.rename = function (containerName, containerData) {
-                return $http.post('https://localhost:9000/1.0/containers/' + containerName, containerData);
+                return $http.post(SettingServices.getLxdApiUrl() + '/containers/' + containerName, containerData);
             }
 
 
             // Delete a container
             obj.delete = function (containerName) {
-                return $http.delete('https://localhost:9000/1.0/containers/' + containerName).then(function (data) {
+                return $http.delete(SettingServices.getLxdApiUrl() + '/containers/' + containerName).then(function (data) {
                     return data;
                 });
             }
@@ -90,7 +90,7 @@ angular.module('myApp.container')
 
             /** State **/
             obj.getState = function (containerName) {
-                return $http.get('https://localhost:9000/1.0/containers/' + containerName + '/state');
+                return $http.get(SettingServices.getLxdApiUrl() + '/containers/' + containerName + '/state');
             }
 
             obj.changeState = function (containerName, state) {
@@ -102,7 +102,7 @@ angular.module('myApp.container')
                     "stateful": false        // Whether to store or restore runtime state before stopping or startiong (only valid for stop and start, defaults to false)
                 }
 
-                return $http.put('https://localhost:9000/1.0/containers/' + containerName + '/state', data);
+                return $http.put(SettingServices.getLxdApiUrl() + '/containers/' + containerName + '/state', data);
             }
 
             return obj;

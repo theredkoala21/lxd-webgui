@@ -1,18 +1,18 @@
 'use strict';
 
 angular.module('myApp.operation')
-        .factory('OperationServices', ['$http', '$q',
-            function ($http, $q) {
+        .factory('OperationServices', ['$http', '$q', 'SettingServices',
+            function ($http, $q, SettingServices) {
               var obj = {};
 
                 // Get a operation
                 obj.get = function (operationName) {
-                    return $http.get('https://localhost:9000/1.0/operations/' + operationName);
+                    return $http.get(SettingServices.getLxdApiUrl() + '/operations/' + operationName);
                 }
 
                 // Get all operations
                 obj.getAll = function() {
-                    return $http.get('https://localhost:9000/1.0/operations').then(function (data) {
+                    return $http.get(SettingServices.getLxdApiUrl() + '/operations').then(function (data) {
                       data = data.data;
 
                       if (data.status != "Success") {
@@ -22,7 +22,7 @@ angular.module('myApp.operation')
                       if ( ! _.isEmpty(data.metadata.running)) {
 
                         var promises = data.metadata.running.map(function(operationUrl) {
-                            return $http.get('https://localhost:9000' + operationUrl).then(function(resp) {
+                            return $http.get(SettingServices.getLxdUrl() + operationUrl).then(function(resp) {
                                 return resp.data.metadata;
                             });
                         });
@@ -34,7 +34,7 @@ angular.module('myApp.operation')
                       if ( ! _.isEmpty(data.metadata.failure)) {
 
                         var promises = data.metadata.failure.map(function(operationUrl) {
-                            return $http.get('https://localhost:9000' + operationUrl).then(function(resp) {
+                            return $http.get(SettingServices.getLxdUrl() + operationUrl).then(function(resp) {
                                 return resp.data.metadata;
                             });
                         });

@@ -1,0 +1,71 @@
+
+
+<div class="col-md-12">
+  Settings for LXD-GUI:
+
+  <div class="row">
+    <div class="col-md-2">
+      LXD Server URL:
+    </div>
+
+    <div class="col-md-2">
+       <input size="64" type="text" ng-model="myconfig.lxdurl">
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-2">
+      <button class="btn btn-primary" type="button" ng-click="save()">Save</button>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="col-md-12">
+  Settings for LXD:
+
+  <div class="row">
+    <div class="col-md-2">
+      Addresses:
+    </div>
+
+    <div class="col-md-2">
+      {{config.environment.addresses[0]}}
+    </div>
+  </div>
+
+
+  <div class="row">
+    <div class="col-md-2">
+      Architecture:
+    </div>
+
+    <div class="col-md-2">
+      {{config.environment.architectures[0]}} / {{config.environment.architectures[1]}}
+    </div>
+  </div>
+
+
+  <div class="row">
+    <div class="col-md-2">
+      Server Version:
+    </div>
+
+    <div class="col-md-2">
+      {{config.environment.server_version}}
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-2">
+      Storage:
+    </div>
+
+    <div class="col-md-2">
+      {{config.environment.storage}}
+    </div>
+  </div>
+
+
+</div>

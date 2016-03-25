@@ -12,7 +12,7 @@ angular.module('myApp.terminal', ['ngRoute'])
 
 
     .controller('terminalPageCtrl', function ($scope, $routeParams, $filter, $location,
-                                                 TerminalServices) {
+                                                 TerminalServices, SettingServices) {
      $scope.containerName = $routeParams.containerName;
 
      TerminalServices.getTerminal($scope.containerName).then(function(data) {
@@ -21,7 +21,7 @@ angular.module('myApp.terminal', ['ngRoute'])
         var operationId = data.data.metadata.id;
         var secret = data.data.metadata.metadata.fds[0];
 
-        var wssurl = "wss://localhost:9000/1.0/operations/"
+        var wssurl = SettingServices.getLxdWsUrl + "/1.0/operations/"
           + operationId
           + "/websocket?secret="
           + secret;
