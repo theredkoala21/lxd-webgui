@@ -62,6 +62,7 @@ angular.module('myApp.container')
                 return $http.post('https://localhost:9000/1.0/containers', containerData);
             }
 
+
             // Modify container:
             obj.modify = function (containerName, containerData, callback) {
                 delete containerData['name'];
@@ -73,15 +74,16 @@ angular.module('myApp.container')
             }
 
 
-            // rename  container:
+            // Rename  a container
             obj.rename = function (containerName, containerData) {
                 return $http.post('https://localhost:9000/1.0/containers/' + containerName, containerData);
             }
 
 
-            obj.delete = function (containerName, callback) {
-                $http.delete('https://localhost:9000/1.0/containers/' + containerName).success(function (data) {
-                    callback(data);
+            // Delete a container
+            obj.delete = function (containerName) {
+                return $http.delete('https://localhost:9000/1.0/containers/' + containerName).then(function (data) {
+                    return data;
                 });
             }
 

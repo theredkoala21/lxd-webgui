@@ -102,7 +102,7 @@ angular.module('myApp.container', ['ngRoute'])
     })
 
 
-    .controller('containerListCtrl', function ($scope, $routeParams, $filter, $location,
+    .controller('containerListCtrl', function ($scope, $routeParams, $filter, $location, $uibModal,
                                                ContainerServices, containers) {
         $scope.containers = containers;
 
@@ -114,9 +114,28 @@ angular.module('myApp.container', ['ngRoute'])
             });
         }
 
-        $scope.delete = function (container, state) {
-            alert("Not yet implemented");
-            //ContainerServices.delete(container.name, state);
+        $scope.delete = function (container) {
+          console.log("Del");
+
+          // Create modal
+          var modalInstance = $uibModal.open({
+              animation: $scope.animationsEnabled,
+              templateUrl: 'modules/container/modalDelContainer.html',
+              controller: 'genericContainerModalCtrl',
+              size: 'sm',
+              resolve: {
+                container: function () {
+                    return container;
+                }
+              }
+          });
+
+          // Handle modal answer
+          modalInstance.result.then(function (container) {
+             ContainerServices.delete(container.name);
+          }, function () {
+            // Nothing
+          });
         }
     })
 

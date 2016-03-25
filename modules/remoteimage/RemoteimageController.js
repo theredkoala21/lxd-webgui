@@ -70,6 +70,7 @@ angular.module('myApp.remoteimage', ['ngRoute'])
 
 
         $scope.addRemoteimage = function(remoteimage) {
+            // Create modal
             var modalInstance = $uibModal.open({
                 animation: $scope.animationsEnabled,
                 templateUrl: 'modules/remoteimage/modalAddRemoteimage.html',
@@ -82,6 +83,7 @@ angular.module('myApp.remoteimage', ['ngRoute'])
                 }
             });
 
+            // Handle modal answer
             modalInstance.result.then(function (remoteimage) {
                ImageServices.addSourceImageRepo(remoteimage);
             }, function () {
