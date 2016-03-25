@@ -82,8 +82,6 @@ angular.module('myApp.image')
                         }
                     }
 
-                    console.log("A :" + JSON.stringify(remoteimage));
-
                     $http.post('https://localhost:9000/1.0/images', data).then(function(data) {
                         var opUrl = data.data.operation;
                         $http.get('https://localhost:9000' + opUrl);
@@ -114,7 +112,6 @@ angular.module('myApp.image')
 
 
                 obj.addSourceImage2 = function(fingerprint) {
-                  console.log("New2");
                     var data = {
                     "public": true,                         //# Whether the image can be downloaded by untrusted users (defaults to false)
 //                    "auto_update": true,                    //# Whether the image should be auto-updated (optional; defaults to false)

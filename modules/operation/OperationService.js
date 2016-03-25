@@ -1,7 +1,7 @@
 'use strict';
 
 angular.module('myApp.operation')
-        .factory('OperationServices', ['$http', '$q', 
+        .factory('OperationServices', ['$http', '$q',
             function ($http, $q) {
               var obj = {};
 
@@ -19,7 +19,7 @@ angular.module('myApp.operation')
                         return $q.reject("Error");
                       }
 
-                      if ( _.isEmpty(data.metadata)) {
+                      if ( _.isEmpty(data.metadata.running)) {
                         return data;
                       }
 

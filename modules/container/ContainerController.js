@@ -82,7 +82,7 @@ angular.module('myApp.container', ['ngRoute'])
                     $location.url("/containers/");
                 });
             }, function () {
-                console.log('Modal dismissed at: ' + new Date());
+                // Nothing
             });
         }
     })
@@ -107,7 +107,11 @@ angular.module('myApp.container', ['ngRoute'])
         $scope.containers = containers;
 
         $scope.changeState = function (container, state) {
-            ContainerServices.changeState(container.name, state);
+            ContainerServices.changeState(container.name, state).then(function(data) {
+              ContainerServices.getAll().then(function(data) {
+                $scope.containers = data;
+              })
+            });
         }
 
         $scope.delete = function (container, state) {
