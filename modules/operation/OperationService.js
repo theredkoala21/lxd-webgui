@@ -19,17 +19,30 @@ angular.module('myApp.operation')
                         return $q.reject("Error");
                       }
 
-                      if ( _.isEmpty(data.metadata.running)) {
-                        return data;
+                      if ( ! _.isEmpty(data.metadata.running)) {
+
+                        var promises = data.metadata.running.map(function(operationUrl) {
+                            return $http.get('https://localhost:9000' + operationUrl).then(function(resp) {
+                                return resp.data.metadata;
+                            });
+                        });
+
+                        return $q.all(promises);
                       }
 
-                      var promises = data.metadata.running.map(function(operationUrl) {
-                          return $http.get('https://localhost:9000' + operationUrl).then(function(resp) {
-                              return resp.data.metadata;
-                          });
-                      });
 
-                      return $q.all(promises);
+                      if ( ! _.isEmpty(data.metadata.failure)) {
+
+                        var promises = data.metadata.failure.map(function(operationUrl) {
+                            return $http.get('https://localhost:9000' + operationUrl).then(function(resp) {
+                                return resp.data.metadata;
+                            });
+                        });
+
+                        return $q.all(promises);
+                      }
+
+
                     });
                 }
 

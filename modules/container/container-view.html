@@ -27,7 +27,7 @@
                 <tr>
                     <td> Name </td>
                     <td> {{container.name}}
-                      <a href ng-click="openEditNameDialog(container)"><span class="glyphicon glyphicon-edit"></span></a>
+                      <a href ng-if="container.status == 'Running'" ng-click="openEditNameDialog(container)"><span class="glyphicon glyphicon-edit"></span></a>
                     </td>
                 </tr>
 
