@@ -102,12 +102,14 @@ $ sudo lxd restart
 ```
 
 
-### debugging
+## start
 
-try to access lxd-gui: https://localhost:8000
-
+important:
 try to access lxd: https://localhost:9000
+(and accept the certificate warning)
 
+
+access lxd-gui: https://localhost:8000
 
 
 
