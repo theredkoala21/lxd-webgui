@@ -124,6 +124,31 @@ angular.module('myApp.remoteimage')
             };
 
 
+            obj.checkFilter = function(result, filter) {
+              if (filter.search) {
+                 if (result.properties.description.toLowerCase().indexOf(filter.search.toLowerCase()) > -1) {
+                   if (filter.architecture) {
+                     if (result.architecture == filter.architecture) {
+                       return true;
+                     }
+                   } else {
+                     return true;
+                   }
+                 }
+              } else {
+                if (filter.architecture) {
+                  if (result.architecture == filter.architecture) {
+                    return true;
+                  }
+                } else {
+                  return true;
+                }
+              }
+
+              return false;
+            }
+
+
             obj.getByFilter = function(filter) {
               //return obj.getAll();
 
@@ -139,24 +164,8 @@ angular.module('myApp.remoteimage')
                 for(var n=0; n<2; n++) {
                   // wow this is fugly
                   data[n].forEach(function(result) {
-                    if (filter.search) {
-                       if (result.properties.description.toLowerCase().indexOf(filter.search.toLowerCase()) > -1) {
-                         if (filter.architecture) {
-                           if (result.architecture == filter.architecture) {
-                             results.push(result);
-                           }
-                         } else {
-                           results.push(result);
-                         }
-                       }
-                    } else {
-                      if (filter.architecture) {
-                        if (result.architecture == filter.architecture) {
-                          results.push(result);
-                        }
-                      } else {
-                        results.push(result);
-                      }
+                    if (obj.checkFilter(result, filter)) {
+                      results.push(result);
                     }
                   });
                 }

@@ -33,19 +33,28 @@ angular.module('myApp.remoteimage', ['ngRoute'])
     })
 
 
-    .controller('remoteimageListCtrl', function ($scope, $routeParams, $filter, $location,
+    .controller('remoteimageListCtrl', function ($scope, $routeParams, $filter, $location, $uibModal,
                                                 RemoteimageServices, ImageServices)
     {
         $scope.remoteimages = [];
         $scope.filter = {
           search: '',
         };
+
         $scope.architectures = [
-          'amd64',
-          'i386',
+          'amd64', // x86_64
+          'x86_64',
+
+          'i386', // i686
+          'i686',
+
           'armhf',
           'arm64',
           'ppc64el',
+
+          'armv7l',
+          'ppc',
+          's390x'
         ];
 
         $scope.reload = function() {
@@ -57,12 +66,45 @@ angular.module('myApp.remoteimage', ['ngRoute'])
           })
         }
 
-        $scope.addRemoteimage = function (remoteimage) {
-          ImageServices.addSourceImageRepo(remoteimage);
-        }
-
         $scope.reload();
+
+
+        $scope.addRemoteimage = function(remoteimage) {
+            var modalInstance = $uibModal.open({
+                animation: $scope.animationsEnabled,
+                templateUrl: 'modules/remoteimage/modalAddRemoteimage.html',
+                controller: 'genericRemoteimageModalCtrl',
+                size: 'lg',
+                resolve: {
+                    remoteimage: function () {
+                        return remoteimage;
+                    }
+                }
+            });
+
+            modalInstance.result.then(function (remoteimage) {
+               ImageServices.addSourceImageRepo(remoteimage);
+            }, function () {
+              // Nothing
+            });
+          }
     })
+
+
+    .controller('genericRemoteimageModalCtrl', function ($scope, $routeParams, $filter, $location, $uibModalInstance,
+                                                       remoteimage)
+    {
+        $scope.remoteimage = remoteimage;
+
+        $scope.ok = function () {
+            $uibModalInstance.close($scope.remoteimage);
+        };
+
+        $scope.cancel = function () {
+            $uibModalInstance.dismiss('cancel');
+        };
+    })
+
 
 
     .controller('remoteimageAddRemoteCtrl', function ($scope, $routeParams, $filter, $location, RemoteimageServices) {
