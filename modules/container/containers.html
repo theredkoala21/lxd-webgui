@@ -1,18 +1,18 @@
 <div class="col-md-12" ng-show="containers.length > 0">
 
   <div class="row bottomlinephat">
-    <div class="col-md-5 col-xs-2"> <b>Name</b> </div>
+    <div class="col-md-3 col-xs-3"> <b>Name</b> </div>
     <div class="col-md-1 col-xs-1"> <b>Status</b> </div>
-    <div class="col-md-1 col-xs-2"> <b>Architecture</b> </div>
+    <div class="col-md-2 col-xs-2"> <b>Architecture</b> </div>
     <div class="col-md-1 col-xs-1"> <b>Stateful</b> </div>
     <div class="col-md-1 col-xs-1"> <b>Actions</b> </div>
-    <div class="col-md-3 col-xs-3"> <b>Edit</b> </div>
+    <div class="col-md-4 col-xs-4"> <b></b> </div>
   </div>
 
   <div class="row bottomline" ng-repeat="container in containers">
-    <div class="col-md-5 col-xs-5"> {{container.name}} </div>
+    <div class="col-md-3 col-xs-3"> {{container.name}} </div>
     <div class="col-md-1 col-xs-1"> {{container.status}} </div>
-    <div class="col-md-1 col-xs-2"> {{container.architecture}} </div>
+    <div class="col-md-2 col-xs-2"> {{container.architecture}} </div>
     <div class="col-md-1 col-xs-1"> {{container.stateful}} </div>
     <div class="col-md-1 col-xs-1">
       <div ng-if="container.status != 'Running'">
@@ -25,16 +25,16 @@
       </div>
     </div>
 
-    <div class="col-md-3 col-xs-3">
+    <div class="col-md-4 col-xs-3">
       <a class="btn btn-sm btn-primary" href="#/container-view/{{container.name}}"><i
               class="glyphicon glyphicon-edit"></i> View</a>
       <a class="btn btn-sm btn-danger" ng-click="delete(container)"><i
               class="glyphicon glyphicon-remove"></i> Delete</a>
-      <a ng-show="container.status=='Running'" class="btn btn-sm btn-info" href="#/terminal/{{container.name}}"><i
-              class="glyphicon glyphicon-modal-window"></i> Terminal</a>
 
       <a ng-show="container.status=='Running'" class="btn btn-sm btn-info" ng-click="showTerminal(container)"><i
-              class="glyphicon glyphicon-modal-window"></i> Terminal 2 </a>
+              class="glyphicon glyphicon-modal-window"></i> Term</a>
+      <a ng-show="container.status=='Running'" class="btn btn-sm btn-info" href="#/terminal/{{container.name}}"><i
+              class="glyphicon glyphicon-modal-window"></i> Term Tab</a>
 
     </div>
 
