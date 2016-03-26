@@ -103,7 +103,7 @@ angular.module('myApp.container', ['ngRoute'])
 
 
     .controller('containerListCtrl', function ($scope, $routeParams, $filter, $location, $uibModal,
-                                               ContainerServices, containers) {
+                                               ContainerServices, TerminalServices, SettingServices, containers) {
         $scope.containers = containers;
 
         $scope.changeState = function (container, state) {
@@ -135,6 +135,22 @@ angular.module('myApp.container', ['ngRoute'])
              ContainerServices.delete(container.name);
           }, function () {
             // Nothing
+          });
+        }
+
+
+        $scope.showTerminal = function(container) {
+          if (container.isTerminalShown) {
+            container.terminal.destroy();
+            container.isTerminalShown = false;
+            return;
+          }
+
+          container.isTerminalShown = true;
+
+          TerminalServices.getTerminal2(container.name).then(function(term) {
+            container.terminal = term;
+            term.open(document.getElementById('console' + container.name));
           });
         }
     })
