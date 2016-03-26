@@ -38,6 +38,15 @@ angular.module('myApp.setting')
             }
 
 
+            obj.testLxd = function() {
+              return $http.get(obj.getLxdApiUrl());
+            }
+
+            obj.testLxdAuth = function() {
+              return $http.get(obj.getLxdApiUrl() + '/certificates');
+            }
+
+
             obj.getConfig = function() {
                 return $http.get(obj.getLxdUrl() + '/1.0');
             }
