@@ -15,7 +15,8 @@ angular.module('myApp', [
   'myApp.network',
   'myApp.operation',
   'myApp.terminal',
-  'myApp.setting'
+  'myApp.setting',
+  'myApp.profile'
 ]).
 
 config(['$routeProvider', function($routeProvider) {
