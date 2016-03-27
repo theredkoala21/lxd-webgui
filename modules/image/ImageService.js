@@ -51,6 +51,10 @@ angular.module('myApp.image')
                   });
                 }
 
+                obj.delete = function(container) {
+                  return $http.delete(SettingServices.getLxdApiUrl() + '/images/' + container.fingerprint);
+                }
+
 
                 obj.addRemoteImage = function(url) {
                     var data = {

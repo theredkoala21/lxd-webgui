@@ -36,10 +36,52 @@ angular.module('myApp.image', ['ngRoute'])
         $scope.image = image.data.metadata;
     })
 
-    .controller('imageListCtrl', function ($scope, $routeParams, $filter, $location,
+    .controller('imageListCtrl', function ($scope, $routeParams, $filter, $location, $uibModal,
                                            ImageServices, images) {
         $scope.images = images;
+
+        $scope.delete = function(image) {
+
+          // Create modal
+          var modalInstance = $uibModal.open({
+              animation: $scope.animationsEnabled,
+              templateUrl: 'modules/image/modalDelImage.html',
+              controller: 'genericImageModalCtrl',
+              size: 'md',
+              resolve: {
+                image: function () {
+                    return image;
+                }
+              }
+          });
+
+          // Handle modal answer
+          modalInstance.result.then(function (container) {
+            ImageServices.delete(container).then(function(data) {
+              ImageServices.getAll().then(function(data) {
+                $scope.images = data;
+              })
+            });
+          }, function () {
+            // Nothing
+          });
+      }
     })
+
+
+    .controller('genericImageModalCtrl', function ($scope, $routeParams, $filter, $location, $uibModalInstance,
+                                                       image, ImageServices) {
+        $scope.image = image;
+
+        $scope.ok = function () {
+            $uibModalInstance.close($scope.image);
+        };
+
+        $scope.cancel = function () {
+            $uibModalInstance.dismiss('cancel');
+        };
+    })
+
 
     .controller('imageAddRemoteCtrl', function ($scope, $routeParams, $filter, $location, ImageServices) {
         $scope.addRemoteImage = function () {

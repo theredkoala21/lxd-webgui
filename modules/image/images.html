@@ -23,7 +23,7 @@
                     </td>
 
                     <td>
-                      {{image.properties.os}} {{image.properties.release}} {{image.properties.version}} 
+                      {{image.properties.os}} {{image.properties.release}} {{image.properties.version}}
                     </td>
 
                     <td> {{image.architecture}}
@@ -33,7 +33,11 @@
                     <td> {{image.size}}</td>
 
                     <td>
-                        <a class="btn btn-sm btn-primary" href="#/image-view/{{image.fingerprint}}"><i class="glyphicon glyphicon-zoom-in"></i>View</a>
+                        <a class="btn btn-sm btn-primary" href="#/image-view/{{image.fingerprint}}">
+                          <i class="glyphicon glyphicon-zoom-in"></i>View</a>
+
+                        <a class="btn btn-sm btn-danger" ng-click="delete(image)"><i
+                                class="glyphicon glyphicon-remove"></i> Delete</a>
                     </td>
                 </tr>
             </tbody>
