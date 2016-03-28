@@ -1,12 +1,12 @@
 # Description
 
 A lightweight web management web interface for LXD.
-Completely in JavaScript. Does not need an application server, database or any other
-backend services. Just serve the static HTML and JS files.
+
+Written completely in AngularJS. Does not need an application server, database or other backend services. Just serve the static HTML and JS files and go!
 
 # Status
 
-This software is alpha.
+This software is beta.
 
 # Screenshot
 
@@ -14,7 +14,14 @@ This software is alpha.
 
 # installation
 
-## LXD
+The installation procedure is as follows:
+- Install LXD (if not already happened)
+- Install lxd-gui
+- Create a certificate and install it into lxd
+- Configure lxd
+
+
+## Install LXD itself
 
 install lxd as described here:
  - https://linuxcontainers.org/lxd/getting-started-cli/
@@ -32,8 +39,9 @@ Would you like LXD to be available over the network (yes/no)? no
 LXD has been successfully configured.
 ```
 
+## Install lxd-gui
 
-## Prerequisites
+### Prerequisites
 
 Install npm, bower and a simple http server:
 ```
@@ -42,14 +50,22 @@ $ sudo npm install -g bower
 $ sudo npm install -g http-server
 ```
 
-## Dependencies
+### checkout lxd-gui
+
+```
+$ git clone https://github.com/dobin/lxd-webgui.git
+$ cd lxd-webgui
+```
+
+
+### Dependencies
 
 install web dependencies for lxc-gui:
 ```
 lxd-webgui$ bower install
 ```
 
-## HTTP server
+### HTTP server
 
 create certs for the http server:
 ```
@@ -86,7 +102,7 @@ Now, add the PKCS12 cert.p12 to your browser:
  Chrome: "Settings" -> "Manage Certificates" ->  "import" -> select the .p12 from above
 ```
 
-### lxd configuration
+## lxd configuration
 
 Configure LXD to listen to localhost on port 9000, and allow access from localhost port 8000.
 Also add cert to the trusted certs for lxd. We also have to configure LXD to accept the PUT, DELETE and OPTIONS HTTP headers, and fix allowed headers to  include "Content-Type".
