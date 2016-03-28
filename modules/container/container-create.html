@@ -15,18 +15,23 @@
 
             <tr>
                 <td> Selected Image </td>
-                <td> {{selectedImage.fingerprint | limitTo:12}}</td>
+                <td> {{selectedImage.fingerprint | limitTo:12}} </td>
             </tr>
 
 
             <tr>
-                <td> Ephemeral</td>
-                <td> {{container.ephemeral}}</td>
+                <td> Profile </td>
+                <td> {{container.profile}} </td>
             </tr>
 
             <tr>
-                <td> Stateful</td>
-                <td> {{container.stateful}}</td>
+                <td> Ephemeral </td>
+                <td> {{container.ephemeral}} </td>
+            </tr>
+
+            <tr>
+                <td> Stateful </td>
+                <td> {{container.stateful}} </td>
             </tr>
 
 
@@ -45,6 +50,10 @@
     <div class="col-md-7">
         Select an image:
         <table class="table table-condensed">
+            <div ng-if="images.length == 0">
+              No images available.
+              Add a <a href="#/remoteimages">Remote Image</a>
+            </div>
 
             <tbody>
             <tr ng-repeat="image in images">
@@ -52,6 +61,8 @@
                   <a class="btn btn-sm btn-primary" ng-click="setImage(image)">
                       <i class="glyphicon glyphicon-asterisk"></i>Select
                   </a>
+
+
               </td>
                 <td>
                     {{image.fingerprint | limitTo: 12}}
