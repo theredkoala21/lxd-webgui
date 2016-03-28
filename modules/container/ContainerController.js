@@ -19,7 +19,10 @@ angular.module('myApp.container', ['ngRoute'])
             resolve: {
                 images: function (ImageServices, $route) {
                     return ImageServices.getAll();
-                }
+                },
+                profiles: function(ProfileServices) {
+                    return ProfileServices.getAll();
+                },
             }
         })
         .when('/container-view/:containerName', {
@@ -115,8 +118,6 @@ angular.module('myApp.container', ['ngRoute'])
         }
 
         $scope.delete = function (container) {
-          console.log("Del");
-
           // Create modal
           var modalInstance = $uibModal.open({
               animation: $scope.animationsEnabled,
@@ -157,21 +158,32 @@ angular.module('myApp.container', ['ngRoute'])
 
 
     .controller('containerCreateCtrl', function ($scope, $routeParams, $filter, $location,
-                                                 ContainerServices, ImageServices, images) {
-        $scope.container = {};
-        $scope.selectedImage = {};
+                                                 ContainerServices, ImageServices, profiles, images) {
+        $scope.containerName = "";
+
+        $scope.selectedImage = null;
         $scope.images = images;
+
+        $scope.profiles = profiles;
+        $scope.selected = {
+          profile: _.findWhere(profiles, { name: "default"} ),
+          ephemeral: false,
+        }
+
 
         $scope.setImage = function (image) {
             $scope.selectedImage = image;
         }
 
         $scope.createContainer = function () {
-            ContainerServices.create($scope.container, $scope.selectedImage);
-        }
-
-        $scope.createContainer2 = function () {
-            ContainerServices.create2($scope.container, $scope.selectedImage);
+            ContainerServices.create(
+              $scope.containerName,
+              $scope.selected.image.fingerprint,
+              $scope.selected.profile.name,
+              $scope.selected.ephemeral)
+              .then(function(data) {
+                window.location = "#/containers";
+              });
         }
     })
 ;

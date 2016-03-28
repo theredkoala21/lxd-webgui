@@ -46,10 +46,15 @@ angular.module('myApp.container')
 
 
             // Create container:
-            obj.create = function (containerData, imageData) {
-                containerData.source = {
-                    type: "image",
-                    fingerprint: imageData.fingerprint
+            obj.create = function (containerName, imageFingerprint, profileName, ephemeralState) {
+                var containerData = {
+                  name: containerName,
+                  profiles: [ profileName ],
+                  ephemeral: ephemeralState,
+                  source: {
+                      type: "image",
+                      fingerprint: imageFingerprint,
+                  }
                 };
                 return $http.post(SettingServices.getLxdApiUrl() + '/containers', containerData);
             }

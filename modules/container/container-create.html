@@ -1,37 +1,64 @@
 <div class="row">
-    <div class="col-md-5">
+    <div class="col-md-12">
         <table class="table table-condensed">
           Container create:
             <tbody>
             <tr>
                 <td> Name</td>
                 <td>
-                  <input ng-model="container.name"
+                  <input ng-model="containerName"
                   type="text"
-                  value="{{container.name}}"
+                  value="{{containerName}}"
                   size="32">
+                </td>
+                <td>
+                  64 chars max, ASCII, no slash, no colon and no comma
                 </td>
             </tr>
 
             <tr>
-                <td> Selected Image </td>
-                <td> {{selectedImage.fingerprint | limitTo:12}} </td>
-            </tr>
+                <td> Image </td>
+                <td>
+                  <ui-select ng-model="selected.image">
+                      <ui-select-match>
+                          <span ng-bind="$select.selected.properties.description"></span>
+                      </ui-select-match>
 
+                      <ui-select-choices repeat="image in (images | filter: $select.search)">
+                          <span ng-bind="image.properties.description"></span>
+                      </ui-select-choices>
+                  </ui-select>
+
+                </td>
+                <td>
+                  Base image
+                </td>
+            </tr>
 
             <tr>
                 <td> Profile </td>
-                <td> {{container.profile}} </td>
+                <td>
+                  <ui-select ng-model="selected.profile">
+                      <ui-select-match>
+                          <span ng-bind="$select.selected.name"></span>
+                      </ui-select-match>
+                      <ui-select-choices repeat="profile in (profiles | filter: $select.search)">
+                          <span ng-bind="profile.name"></span>
+                      </ui-select-choices>
+                  </ui-select>
+                </td>
+                <td>
+                  Base configuration profile
+                </td>
             </tr>
 
             <tr>
                 <td> Ephemeral </td>
-                <td> {{container.ephemeral}} </td>
-            </tr>
-
-            <tr>
-                <td> Stateful </td>
-                <td> {{container.stateful}} </td>
+                <td>
+                  <label><input type="checkbox" ng-model="selected.ephemeral"></label>
+                </td>
+                <td>Whether to destroy the container on shutdown
+                </td>
             </tr>
 
 
@@ -43,35 +70,6 @@
                 </td>
             </tr>
 
-            </tbody>
-        </table>
-    </div>
-
-    <div class="col-md-7">
-        Select an image:
-        <table class="table table-condensed">
-            <div ng-if="images.length == 0">
-              No images available.
-              Add a <a href="#/remoteimages">Remote Image</a>
-            </div>
-
-            <tbody>
-            <tr ng-repeat="image in images">
-              <td>
-                  <a class="btn btn-sm btn-primary" ng-click="setImage(image)">
-                      <i class="glyphicon glyphicon-asterisk"></i>Select
-                  </a>
-
-
-              </td>
-                <td>
-                    {{image.fingerprint | limitTo: 12}}
-                </td>
-                <td>
-                    {{image.filename}}
-                    {{image.properties.description}}
-                </td>
-            </tr>
             </tbody>
         </table>
     </div>

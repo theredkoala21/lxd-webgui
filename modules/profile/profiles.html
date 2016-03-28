@@ -6,7 +6,7 @@
             <thead>
             <th>Name</th>
             <th>Description</th>
-            <th>Config</th>
+            <th>Memory</th>
             <th>Devices</th>
             <th>Action</th>
             </thead>
@@ -25,7 +25,10 @@
                       {{profile.config.limits.memory}}
                     </td>
 
-                    <td> {{profile.devices.kvm.type}} {{profile.devices.kvm.path}}
+                    <td>
+                      {{profile.raw.lxc}}
+                      {{profile.devices.eth0.nictype}} {{profile.devices.eth0.parent}}
+                      {{profile.devices.kvm.type}} {{profile.devices.kvm.path}}
                     </td>
 
                     <td><!--
