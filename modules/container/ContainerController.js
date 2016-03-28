@@ -175,15 +175,21 @@ angular.module('myApp.container', ['ngRoute'])
             $scope.selectedImage = image;
         }
 
-        $scope.createContainer = function () {
+        $scope.createContainer = function (isValid) {
+          $scope.isSubmitted = true;
+
+          if (isValid) {
             ContainerServices.create(
-              $scope.containerName,
-              $scope.selected.image.fingerprint,
-              $scope.selected.profile.name,
-              $scope.selected.ephemeral)
-              .then(function(data) {
-                window.location = "#/containers";
-              });
+                $scope.containerName,
+                $scope.selected.image.fingerprint,
+                $scope.selected.profile.name,
+                $scope.selected.ephemeral)
+                .then(function(data) {
+                  window.location = "#/containers";
+                }
+            );
+          }
+
         }
     })
 ;
