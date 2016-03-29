@@ -2,93 +2,111 @@
     <div class="col-md-12">
       <form name="userForm" ng-submit="createContainer(userForm.$valid)" novalidate> <!-- novalidate prevents HTML5 validation since we will be validating ourselves -->
 
-        <table class="table table-condensed">
-          Container create:
-            <tbody>
-            <tr>
-                <td> Name</td>
-                <td>
-                  <input ng-model="containerName"
-                  class="form-control"
-                  type="text"
-                  value="{{containerName}}"
-                  size="32"
-                  ng-minlength="3"
-                  ng-maxlength="64"
-                  name="containerName"
-                  required>
+      <div class="row">
+        <div class="form-group" ng-class="{ 'has-error' : userForm.name.$invalid && (!userForm.name.$pristine || isSubmitted )}">
+
+          <div class="col-md-2">
+            <label> Name </label>
+          </div>
+
+          <div class="col-md-4">
+            <input ng-model="containerName"
+            class="form-control"
+            type="text"
+            value="{{containerName}}"
+            size="32"
+            ng-minlength="3"
+            ng-maxlength="64"
+            name="containerName"
+            required>
+          </div>
+
+          <div class="col-md-4">
+            <p ng-show="userForm.containerName.$invalid && (!userForm.containerName.$pristine || isSubmitted)" class="help-block">Name is required.</p>
+            64 chars max, ASCII, no slash, no colon and no comma
+          </div>
+        </div>
+      </div>
 
 
-                </td>
-                <td>
-                  <p ng-show="userForm.containerName.$invalid && (!userForm.containerName.$pristine || isSubmitted)" class="help-block">Name is required.</p>
-                  64 chars max, ASCII, no slash, no colon and no comma
-                </td>
-            </tr>
+      <div class="row">
+        <div class="form-group" ng-class="{ 'has-error' : userForm.name.$invalid && (!userForm.name.$pristine || isSubmitted )}">
 
-            <tr>
-                <td> Image </td>
-                <td>
-                  <ui-select name="image" ng-model="selected.image" required>
-                      <ui-select-match>
-                          <span ng-bind="$select.selected.properties.description"></span>
-                      </ui-select-match>
+          <div class="col-md-2">
+            <label>Image </label>
+          </div>
 
-                      <ui-select-choices repeat="image in (images | filter: $select.search)">
-                          <span ng-bind="image.properties.description"></span>
-                      </ui-select-choices>
-                  </ui-select>
+          <div class="col-md-4">
+            <ui-select name="image" ng-model="selected.image" required>
+                <ui-select-match>
+                    <span ng-bind="$select.selected.properties.description"></span>
+                </ui-select-match>
 
-                </td>
-                <td>
-                  <p ng-show="userForm.image.$invalid && (!userForm.image.$pristine || isSubmitted)" class="help-block">Image is required.</p>
+                <ui-select-choices repeat="image in (images | filter: $select.search)">
+                    <span ng-bind="image.properties.description"></span>
+                </ui-select-choices>
+            </ui-select>
 
-                  Base image
-                </td>
-            </tr>
+          </div>
 
-            <tr>
-                <td> Profile </td>
-                <td>
-                  <ui-select ng-model="selected.profile" required>
-                      <ui-select-match>
-                          <span ng-bind="$select.selected.name"></span>
-                      </ui-select-match>
-                      <ui-select-choices repeat="profile in (profiles | filter: $select.search)">
-                          <span ng-bind="profile.name"></span>
-                      </ui-select-choices>
-                  </ui-select>
-                </td>
-                <td>
-                  Base configuration profile
-                </td>
-            </tr>
-
-            <tr>
-                <td> Ephemeral </td>
-                <td>
-                  <label><input type="checkbox" ng-model="selected.ephemeral"></label>
-                </td>
-                <td>Whether to destroy the container on shutdown
-                </td>
-            </tr>
+          <div class="col-md-4">
+            <p ng-show="userForm.image.$invalid && (!userForm.image.$pristine || isSubmitted)" class="help-block">Image is required.</p>
+            Base image
+          </div>
+        </div>
+      </div>
 
 
-            <tr>
-                <td>
-                    <a class="btn btn-md btn-primary" ng-click="createContainer()">
-                        <i class="glyphicon glyphicon-plus"> Add Container</i>
-                    </a>
-                    <button type="submit" class="btn btn-primary">Submit</button>
+      <div class="row">
+        <div class="form-group" ng-class="{ 'has-error' : userForm.name.$invalid && (!userForm.name.$pristine || isSubmitted )}">
 
-                </td>
-                <td> </td>
-                <td> </td>
+          <div class="col-md-2">
+            <label>Profile</label>
+          </div>
 
-            </tr>
+          <div class="col-md-4">
+            <ui-select ng-model="selected.profile" required>
+                <ui-select-match>
+                    <span ng-bind="$select.selected.name"></span>
+                </ui-select-match>
+                <ui-select-choices repeat="profile in (profiles | filter: $select.search)">
+                    <span ng-bind="profile.name"></span>
+                </ui-select-choices>
+            </ui-select>
+          </div>
 
-            </tbody>
-        </table>
+          <div class="col-md-4">
+            Base configuration profile
+          </div>
+        </div>
+      </div>
+
+
+      <div class="row">
+        <div class="form-group" ng-class="{ 'has-error' : userForm.name.$invalid && (!userForm.name.$pristine || isSubmitted )}">
+
+          <div class="col-md-2">
+            <label> Ephemeral</label>
+          </div>
+
+          <div class="col-md-4">
+            <label><input type="checkbox" ng-model="selected.ephemeral"></label>
+
+          </div>
+
+          <div class="col-md-4">
+            Whether to destroy the container on shutdown
+          </div>
+
+        </div>
+      </div>
+
+
+      <div class="row">
+        <button type="submit" class="btn btn-primary">
+          <i class="glyphicon glyphicon-plus"> Add Container</i>
+        </button>
+      </div>
 
       </form>
     </div>
