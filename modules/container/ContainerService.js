@@ -110,6 +110,28 @@ angular.module('myApp.container')
                 return $http.put(SettingServices.getLxdApiUrl() + '/containers/' + containerName + '/state', data);
             }
 
+            /** Snapshot **/
+
+            obj.getSnapshots = function(containerName) {
+              return $http.get(SettingServices.getLxdApiUrl() + '/containers/' + containerName + '/snapshots').then(function (data) {
+                  data = data.data;
+
+                  if (data.status != "Success") {
+                      return $q.reject("Error");
+                  }
+
+
+                  var promises = data.metadata.map(function (containerUrl) {
+                      return $http.get(SettingServices.getLxdUrl() + containerUrl).then(function (resp) {
+                          return resp.data.metadata;
+                      });
+                  });
+
+                  return $q.all(promises);
+              });
+
+            }
+
             return obj;
         }])
 ;

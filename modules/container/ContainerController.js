@@ -38,6 +38,16 @@ angular.module('myApp.container', ['ngRoute'])
                 }
             }
         })
+        .when('/container-snapshots/:containerName', {
+            title: 'Container',
+            templateUrl: 'modules/container/container-snapshots.html',
+            controller: 'containerSnapshotCtrl',
+            resolve: {
+                snapshots: function (ContainerServices, $route) {
+                    return ContainerServices.getSnapshots($route.current.params.containerName)
+                },
+            }
+        })
         .when('/container-edit/:containerName', {
             title: 'Container',
             templateUrl: 'modules/container/container-edit.html',
@@ -190,6 +200,21 @@ angular.module('myApp.container', ['ngRoute'])
             );
           }
 
+        }
+    })
+
+
+
+    .controller('containerSnapshotCtrl', function ($scope, $routeParams, $filter, $location,
+                                                 ContainerServices, snapshots) {
+        $scope.snapshots = snapshots;
+
+        $scope.restore = function(snapshot) {
+          alert("Not yet implemented");
+        }
+
+        $scope.delete = function(snapshot) {
+          alert("Not yet implemented");
         }
     })
 ;
