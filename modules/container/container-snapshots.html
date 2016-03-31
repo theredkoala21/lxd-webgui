@@ -1,9 +1,16 @@
+<div class="col-md-12">
+  <a class="btn btn-sm btn-primary" ng-click="createSnapshot()"><i
+          class="glyphicon glyphicon-plus"></i> Create Snapshot</a>
+
+</div>
+
+
 <div class="col-md-12" ng-show="snapshots.length > 0">
 
   <div class="row bottomlinephat">
     <div class="col-md-3 col-xs-3"> <b>Name</b> </div>
     <div class="col-md-1 col-xs-1"> <b>Ephemeral</b> </div>
-    <div class="col-md-2 col-xs-2"> <b>Architecture</b> </div>
+    <div class="col-md-2 col-xs-2"> <b>Created at</b> </div>
     <div class="col-md-1 col-xs-1"> <b>Stateful</b> </div>
     <div class="col-md-1 col-xs-1"> <b>Actions</b> </div>
   </div>
@@ -11,7 +18,7 @@
   <div class="row bottomline" ng-repeat="snapshot in snapshots">
     <div class="col-md-3 col-xs-3"> {{snapshot.name}} </div>
     <div class="col-md-1 col-xs-1"> {{snapshot.ephemeral}} </div>
-    <div class="col-md-2 col-xs-2"> {{snapshot.architecture}} </div>
+    <div class="col-md-2 col-xs-2"> {{snapshot.created_at}} </div>
     <div class="col-md-1 col-xs-1"> {{snapshot.stateful}} </div>
 
     <div class="col-md-4 col-xs-3">

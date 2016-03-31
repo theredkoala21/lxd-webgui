@@ -44,8 +44,11 @@ angular.module('myApp.container', ['ngRoute'])
             controller: 'containerSnapshotCtrl',
             resolve: {
                 snapshots: function (ContainerServices, $route) {
-                    return ContainerServices.getSnapshots($route.current.params.containerName)
+                  return ContainerServices.getSnapshots($route.current.params.containerName)
                 },
+                container: function(ContainerServices, $route) {
+                  return ContainerServices.getByName($route.current.params.containerName)
+                }
             }
         })
         .when('/container-edit/:containerName', {
@@ -90,7 +93,7 @@ angular.module('myApp.container', ['ngRoute'])
             modalInstance.result.then(function (newContainer) {
                 var newName = {name: newContainer.name};
                 // rename
-                ContainerServices.rename(container.name, newName).success(function (data) {
+                ContainerServices.rename(container.name, newName).then(function (data) {
                     // Move to main because location has changed
                     $location.url("/containers/");
                 });
@@ -205,9 +208,10 @@ angular.module('myApp.container', ['ngRoute'])
 
 
 
-    .controller('containerSnapshotCtrl', function ($scope, $routeParams, $filter, $location,
-                                                 ContainerServices, snapshots) {
+    .controller('containerSnapshotCtrl', function ($scope, $routeParams, $filter, $location, $uibModal,
+                                                 ContainerServices, snapshots, container) {
         $scope.snapshots = snapshots;
+        $scope.container = container.data.metadata;
 
         $scope.restore = function(snapshot) {
           alert("Not yet implemented");
@@ -216,5 +220,49 @@ angular.module('myApp.container', ['ngRoute'])
         $scope.delete = function(snapshot) {
           alert("Not yet implemented");
         }
+        $scope.createSnapshot = function() {
+          var modalInstance = $uibModal.open({
+              animation: $scope.animationsEnabled,
+              templateUrl: 'modules/container/modalSnapshotCreate.html',
+              controller: 'containerSnapshotCreateModalCtrl',
+              size: 'md',
+              resolve: {
+                  container: function () {
+                      return $scope.container;
+                  }
+              }
+          });
+
+          modalInstance.result.then(function (snapshotData) {
+              ContainerServices.createSnapshot($scope.container.name, snapshotData).then(function (data) {
+                  ContainerServices.getSnapshots().then(function(data) {
+                    $scope.snapshots = data;
+                  });
+              });
+          }, function () {
+              // Nothing
+          });
+
+        }
     })
+
+
+    .controller('containerSnapshotCreateModalCtrl', function ($scope, $routeParams, $filter, $location, $uibModalInstance,
+                                                       container, ContainerServices) {
+        $scope.container = container;
+
+        $scope.snapshotData = {
+          name: "",
+          stateful: true
+        };
+
+        $scope.ok = function () {
+            $uibModalInstance.close($scope.snapshotData);
+        };
+
+        $scope.cancel = function () {
+            $uibModalInstance.dismiss('cancel');
+        };
+    })
+
 ;

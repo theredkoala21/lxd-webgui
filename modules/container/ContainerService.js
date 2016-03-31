@@ -132,6 +132,11 @@ angular.module('myApp.container')
 
             }
 
+            obj.createSnapshot = function(containerName, snapshotData) {
+              return $http.post(SettingServices.getLxdApiUrl() + '/containers/' + containerName + '/snapshots', snapshotData);
+
+            }
+
             return obj;
         }])
 ;

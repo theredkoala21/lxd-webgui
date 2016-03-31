@@ -1,0 +1,12 @@
+<div class="modal-header">
+     <h3 class="modal-title">Add snapshot</h3>
+ </div>
+ <div class="modal-body">
+     Name: <input ng-model="snapshotData.name" type="text">
+     <p>
+     Stateful: <input type="checkbox" ng-model="snapshotData.stateful">
+ </div>
+ <div class="modal-footer">
+     <button class="btn btn-primary" type="button" ng-click="ok()">Save</button>
+     <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+ </div>
