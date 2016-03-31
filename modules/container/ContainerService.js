@@ -134,7 +134,13 @@ angular.module('myApp.container')
 
             obj.createSnapshot = function(containerName, snapshotData) {
               return $http.post(SettingServices.getLxdApiUrl() + '/containers/' + containerName + '/snapshots', snapshotData);
+            }
 
+            obj.restoreSnapshot = function(containerName, snapshotName) {
+              var data = {
+                restore: snapshotName,
+              }
+              return $http.put(SettingServices.getLxdApiUrl() + '/containers/' + containerName, data);
             }
 
             return obj;

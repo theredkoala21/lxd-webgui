@@ -214,12 +214,34 @@ angular.module('myApp.container', ['ngRoute'])
         $scope.container = container.data.metadata;
 
         $scope.restore = function(snapshot) {
-          alert("Not yet implemented");
+          var modalInstance = $uibModal.open({
+              animation: $scope.animationsEnabled,
+              templateUrl: 'modules/container/modalSnapshotRestore.html',
+              controller: 'containerSnapshotRestoreModalCtrl',
+              size: 'md',
+              resolve: {
+                  container: function () {
+                      return $scope.container;
+                  },
+                  snapshot: function() {
+                    return snapshot;
+                  }
+              }
+          });
+
+          modalInstance.result.then(function (snapshotData) {
+              ContainerServices.restoreSnapshot($scope.container.name, snapshot.name).then(function(data) {
+
+              });
+          }, function () {
+              // Nothing
+          });
         }
 
         $scope.delete = function(snapshot) {
-          alert("Not yet implemented");
+
         }
+
         $scope.createSnapshot = function() {
           var modalInstance = $uibModal.open({
               animation: $scope.animationsEnabled,
@@ -258,6 +280,20 @@ angular.module('myApp.container', ['ngRoute'])
 
         $scope.ok = function () {
             $uibModalInstance.close($scope.snapshotData);
+        };
+
+        $scope.cancel = function () {
+            $uibModalInstance.dismiss('cancel');
+        };
+    })
+
+    .controller('containerSnapshotRestoreModalCtrl', function ($scope, $routeParams, $filter, $location, $uibModalInstance,
+                                                       container, snapshot, ContainerServices) {
+        $scope.container = container;
+        $scope.snapshot = snapshot;
+
+        $scope.ok = function () {
+            $uibModalInstance.close();
         };
 
         $scope.cancel = function () {
