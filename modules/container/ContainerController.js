@@ -199,8 +199,10 @@ angular.module('myApp.container', ['ngRoute'])
                 $scope.selected.ephemeral)
                 .then(function(data) {
                   window.location = "#/containers";
-                }
-            );
+                }, function(error) {
+                  var errorMsg = error.error;
+                  console.log("Error: " + errorMsg);
+                });
           }
 
         }

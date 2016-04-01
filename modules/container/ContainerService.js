@@ -14,25 +14,14 @@ angular.module('myApp.container')
                 return $http.get(SettingServices.getLxdApiUrl() + '/containers/' + containerName);
             }
 
-            // Get a container
-            obj.getByUrl = function (containerUrl, callback) {
-                $http.get(SettingServices.getLxdUrl() + containerUrl).success(function (data) {
-                    callback(data);
-                });
-            }
-
-
             // Get all containers
             obj.getAll = function () {
                 return $http.get(SettingServices.getLxdApiUrl() + '/containers').then(function (data) {
-                    // {"type":"sync","status":"Success","status_code":200,
-                    // "metadata":["/1.0/containers/hacking"]}
                     data = data.data;
 
                     if (data.status != "Success") {
                         return $q.reject("Error");
                     }
-
 
                     var promises = data.metadata.map(function (containerUrl) {
                         return $http.get(SettingServices.getLxdUrl() + containerUrl).then(function (resp) {
@@ -56,7 +45,16 @@ angular.module('myApp.container')
                       fingerprint: imageFingerprint,
                   }
                 };
-                return $http.post(SettingServices.getLxdApiUrl() + '/containers', containerData);
+                // Async
+                return $http.post(SettingServices.getLxdApiUrl() + '/containers', containerData).then(function(data) {
+                  data = data.data;
+
+                  if (data.status != "Success") {
+                    return($q.reject(data.metadata));
+                  }
+
+                  data = data.metadata;
+                });
             }
 
             obj.createFromAlias = function (containerData, imageData) {
@@ -69,12 +67,12 @@ angular.module('myApp.container')
 
 
             // Modify container:
-            obj.modify = function (containerName, containerData, callback) {
+            obj.modify = function (containerName, containerData) {
                 delete containerData['name'];
                 delete containerData['status'];
 
-                $http.put(SettingServices.getLxdApiUrl() + '/containers/' + containerName, containerData).success(function (data) {
-                    callback(data);
+                return $http.put(SettingServices.getLxdApiUrl() + '/containers/' + containerName, containerData).then(function (data) {
+                    return(data);
                 });
             }
 
@@ -109,6 +107,7 @@ angular.module('myApp.container')
 
                 return $http.put(SettingServices.getLxdApiUrl() + '/containers/' + containerName + '/state', data);
             }
+
 
             /** Snapshot **/
 
