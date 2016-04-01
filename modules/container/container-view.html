@@ -71,18 +71,21 @@
     </div>
 
 
-    <div class="col-md-3">
+    <div class="col-md-4">
         <table class="table table-condensed">
           Config
             <tbody>
                 <tr>
                     <td> Base Image </td>
-                    <td> {{container.config.volatile.base_image}} </td>
+                    <td> {{container.config["volatile.base_image"] | limitTo:12}} </td>
                 </tr>
 
                 <tr>
-                    <td> ETH0 HW ADDR </td>
-                    <td> {{container.config.volatile.eth0.hwaddr}} </td>
+                    <td> eth0 </td>
+                    <td>
+                      {{container.config["volatile.eth0.name"]}}
+                      {{container.config["volatile.eth0.hwaddr"]}}
+                    </td>
                 </tr>
 
                 <tr>

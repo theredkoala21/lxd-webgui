@@ -11,7 +11,9 @@ angular.module('myApp.container')
 
             // Get a container
             obj.getByName = function (containerName) {
-                return $http.get(SettingServices.getLxdApiUrl() + '/containers/' + containerName);
+                return $http.get(SettingServices.getLxdApiUrl() + '/containers/' + containerName).then(function(response) {
+                  return response;
+                });
             }
 
             // Get all containers
