@@ -5,8 +5,8 @@ angular.module('myApp.container')
         function ($http, $q, $timeout, SettingServices) {
             var obj = {};
 
-            obj.isOperationFinished = function (operationID) {
-                return $http.get(SettingServices.getLxdApiUrl() + '/operations' + operationID);
+            obj.isOperationFinished = function (operationUrl) {
+                return $http.get(SettingServices.getLxdApiUrl() + operationUrl);
             }
 
             // Get a container

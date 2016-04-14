@@ -118,17 +118,39 @@ angular.module('myApp.container', ['ngRoute'])
     })
 
 
-    .controller('containerListCtrl', function ($scope, $routeParams, $filter, $location, $uibModal,
+    .controller('containerListCtrl', function ($scope, $routeParams, $filter, $location, $uibModal, $interval,
                                                ContainerServices, TerminalServices, SettingServices, containers) {
         $scope.containers = containers;
 
         $scope.changeState = function (container, state) {
             ContainerServices.changeState(container.name, state).then(function(data) {
-              ContainerServices.getAll().then(function(data) {
-                $scope.containers = data;
-              })
+              var operationUrl = data.data.operation;
+              var refreshInterval;
+
+              // Try until operation is finished
+              refreshInterval = $interval(
+                function() {
+                  ContainerServices.isOperationFinished(operationUrl).then(function(data) {
+                    // I dont really care if the operation is still runnging
+                  }, function(error) {
+                    // Operation returned 404, so its finished
+                    $interval.cancel(refreshInterval);
+                    ContainerServices.getByName(container.name).then(function(data) {
+
+                      //_.findWhere($scope.containers, { name: container.name}) = data.data.metadata;
+                      for(var n=0; n<$scope.containers.length; n++) {
+                        if ($scope.containers[n].name == container.name) {
+                          $scope.containers[n] = data.data.metadata;
+                        }
+                      }
+                    });
+                  });
+                }, 1000
+              );
+
             });
         }
+
 
         $scope.delete = function (container) {
           // Create modal
