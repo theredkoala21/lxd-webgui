@@ -36,12 +36,11 @@ angular.module('myApp.image', ['ngRoute'])
         $scope.image = image.data.metadata;
     })
 
-    .controller('imageListCtrl', function ($scope, $routeParams, $filter, $location, $uibModal,
-                                           ImageServices, images) {
+    .controller('imageListCtrl', function ($scope, $routeParams, $interval, $filter, $location, $uibModal,
+                                           ContainerServices, ImageServices, images) {
         $scope.images = images;
 
         $scope.delete = function(image) {
-
           // Create modal
           var modalInstance = $uibModal.open({
               animation: $scope.animationsEnabled,
@@ -58,12 +57,28 @@ angular.module('myApp.image', ['ngRoute'])
           // Handle modal answer
           modalInstance.result.then(function (container) {
             ImageServices.delete(container).then(function(data) {
-              ImageServices.getAll().then(function(data) {
-                $scope.images = data;
-              })
+
+              var operationUrl = data.data.operation;
+              var refreshInterval;
+
+              // Try until operation is finished
+              refreshInterval = $interval(
+                function() {
+                  ContainerServices.isOperationFinished(operationUrl).then(function(data) {
+                    // I dont really care if the operation is still runnging
+                  }, function(error) {
+                    $interval.cancel(refreshInterval);
+
+                    // Operation returned 404, so its finished
+                    ImageServices.getAll().then(function(data) {
+                      $scope.images = data;
+                    })
+                  });
+                }, 1000
+              );
             });
           }, function () {
-            // Nothing
+            // Do Nothing
           });
       }
     })

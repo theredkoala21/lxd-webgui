@@ -86,9 +86,11 @@ angular.module('myApp.image')
                         }
                     }
 
-                    $http.post(SettingServices.getLxdApiUrl() + '/images', data).then(function(data) {
+                    return $http.post(SettingServices.getLxdApiUrl() + '/images', data).then(function(data) {
                         var opUrl = data.data.operation;
-                        $http.get(SettingServices.getLxdUrl() + opUrl);
+                        return $http.get(SettingServices.getLxdUrl() + opUrl).then(function(data) {
+                          return data;
+                        });
                     });
                 }
 
