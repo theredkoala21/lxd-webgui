@@ -45,10 +45,10 @@ angular.module('myApp.remoteimage')
                  var sock = new WebSocket(wssurl);
 
                  var term = new Terminal({
-                     cols: 160,
+                     cols: 120,
                      rows: 32,
                      useStyle: true,
-                     screenKeys: false,
+                     screenKeys: true,
                      cursorBlink: false
                  });
 
