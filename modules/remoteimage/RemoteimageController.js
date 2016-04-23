@@ -69,6 +69,22 @@ angular.module('myApp.remoteimage', ['ngRoute'])
         $scope.reload();
 
 
+        $scope.showError = function(data) {
+          // Create modal
+          var modalInstance = $uibModal.open({
+              animation: $scope.animationsEnabled,
+              templateUrl: 'modules/remoteimage/modalErrImage.html',
+              controller: 'errorModalCtrl',
+              size: 'lg',
+              resolve: {
+                  data: function () {
+                      return data;
+                  }
+              }
+          });
+        }
+
+
         $scope.addRemoteimage = function(remoteimage) {
             // Create modal
             var modalInstance = $uibModal.open({
@@ -85,9 +101,13 @@ angular.module('myApp.remoteimage', ['ngRoute'])
 
             // Handle modal answer
             modalInstance.result.then(function (remoteimage) {
-               ImageServices.addSourceImageRepo(remoteimage);
+               ImageServices.addSourceImageRepo(remoteimage).then(function(data) {
+                 if (data.data.metadata.status == "Failure") {
+                   $scope.showError(data.data.metadata);
+                 }
+               });
             }, function () {
-              // Nothing
+              // Cancel, so do nothing
             });
           }
     })
@@ -107,6 +127,16 @@ angular.module('myApp.remoteimage', ['ngRoute'])
         };
     })
 
+
+    .controller('errorModalCtrl', function ($scope, $routeParams, $filter, $location, $uibModalInstance,
+                                                       data)
+    {
+        $scope.data = data;
+
+        $scope.cancel = function () {
+            $uibModalInstance.dismiss('cancel');
+        };
+    })
 
 
     .controller('remoteimageAddRemoteCtrl', function ($scope, $routeParams, $filter, $location, RemoteimageServices) {
