@@ -5,55 +5,112 @@ angular.module('myApp.remoteimage')
         function ($http, $q, $cacheFactory) {
             var obj = {};
 
+            obj.convertDate = function(dd) {
+                var y = dd.substring(0, 4);
+                var m = dd.substring(4, 6);
+                var d = dd.substring(6, 8);
+
+                var compatibleDate = y + "-" + m + "-" + d;
+                var nativeTime = Date.parse(compatibleDate);
+
+                return nativeTime;
+            }
+
+
+            // I'm not proud of this
             obj.downloadRemoteimageListImages = function() {
-              var url = "https://images.linuxcontainers.org/";
+                var url = "https://images.linuxcontainers.org/";
 
-              return $http.get("https://images.linuxcontainers.org/1.0/images", {cache: true}).then(function(data) {
+                return $http.get("https://images.linuxcontainers.org/1.0/images", {cache: true}).then(function(data) {
 
-                var promises = data.data.metadata.map(function(imageUrl) {
-                    return $http.get(url + imageUrl, {cache: true}).then(function(resp) {
-                      resp.data.metadata.source = 'images';
-                      resp.data.metadata.sourceUrl = url;
-                      resp.data.metadata.sourceProto = 'lxd';
-                      return resp.data.metadata;
+                    var promises = data.data.metadata.map(function(imageUrl) {
+                        return $http.get(url + imageUrl, {cache: true}).then(function(resp) {
+                            resp.data.metadata.source = 'images';
+                            resp.data.metadata.sourceUrl = url;
+                            resp.data.metadata.sourceProto = 'lxd';
+                            return resp.data.metadata;
+                        });
+                    });
+
+                    return $q.all(promises).then(function(data) {
+                        var ret = [];
+                        var res = {};
+
+                        // Create hashmap of all the returned linux distris
+                        for(var n=0; n<data.length; n++) {
+                            var i = data[n];
+
+                            if (! res[i.properties.distribution]) {
+                                res[i.properties.distribution] = {};
+                            }
+                            if (! res[i.properties.distribution][i.properties.release]) {
+                                res[i.properties.distribution][i.properties.release] = {};
+                            }
+                            if (! res[i.properties.distribution][i.properties.release][i.properties.architecture]) {
+                                res[i.properties.distribution][i.properties.release][i.properties.architecture] = {};
+                            }
+
+                            var dd = i.properties.build.split("_")[0];
+                            var nativeDate = obj.convertDate(dd);
+
+                            if (! res[i.properties.distribution][i.properties.release][i.properties.architecture].date) {
+                                res[i.properties.distribution][i.properties.release][i.properties.architecture].date = nativeDate;
+                                res[i.properties.distribution][i.properties.release][i.properties.architecture].data = i;
+                            } else {
+                                if (nativeDate > res[i.properties.distribution][i.properties.release][i.properties.architecture].date) {
+                                    res[i.properties.distribution][i.properties.release][i.properties.architecture].date = nativeDate;
+                                    res[i.properties.distribution][i.properties.release][i.properties.architecture].data = i;
+                                }
+                            }
+                        }
+
+                        // Extract the one's inserted
+                        for(var distribution in res) {
+                            for (var release in res[distribution]) {
+                                for (var architecture in res[distribution][release]) {
+                                    console.log(distribution + " " + release + " " + architecture + " ");
+                                    ret.push(res[distribution][release][architecture].data);
+                                }
+                            }
+                        }
+
+                        //return data;
+                        return ret;
                     });
                 });
-
-                return $q.all(promises);
-              })
             }
 
 
             obj.downloadRemoteimageListImages_bak = function() {
-              return $http.get("/data/index-user.txt", {cache: true}).then(function(data) {
-                var baseUrl = "https://images.linuxcontainers.org/";
-                var baseImageName = "rootfs.tar.xz";
+                return $http.get("/data/index-user.txt", {cache: true}).then(function(data) {
+                    var baseUrl = "https://images.linuxcontainers.org/";
+                    var baseImageName = "rootfs.tar.xz";
 
-                data = data.data;
+                    data = data.data;
 
-                var results = [];
-                var dataArr = data.split('\n');
-                dataArr.forEach(function(line) {
-                  var entry = line.split(";");
-                  if (entry.length == 6) {
-                    var entryHash = {
-                      source: 'images',
-                      os: entry[0],
-                      release: entry[1],
-                      arch: entry[2],
-                      unkown: entry[3],
-                      date: entry[4],
-                      path: entry[5],
-                      url: baseUrl + entry[5] + baseImageName,
-                      pubname: entry[0] + " " + entry[1] + " / " + entry[4],
-                    }
+                    var results = [];
+                    var dataArr = data.split('\n');
+                    dataArr.forEach(function(line) {
+                        var entry = line.split(";");
+                        if (entry.length == 6) {
+                            var entryHash = {
+                                source: 'images',
+                                os: entry[0],
+                                release: entry[1],
+                                arch: entry[2],
+                                unkown: entry[3],
+                                date: entry[4],
+                                path: entry[5],
+                                url: baseUrl + entry[5] + baseImageName,
+                                pubname: entry[0] + " " + entry[1] + " / " + entry[4],
+                            }
 
-                    results.push(entryHash);
-                  }
-                });
+                            results.push(entryHash);
+                        }
+                    });
 
-                return results;
-              })
+                    return results;
+                })
             }
 
             obj.downloadRemoteimageListUbuntu = function () {
@@ -93,12 +150,17 @@ angular.module('myApp.remoteimage')
                                         } else {
                                             dd = version;
                                         }
-                                        var y = dd.substring(0, 4);
-                                        var m = dd.substring(4, 6);
-                                        var d = dd.substring(6, 8);
 
-                                        var compatibleDate = y + "-" + m + "-" + d;
-                                        var nativeTime = Date.parse(compatibleDate);
+
+                                        var nativeTime = obj.convertDate(dd);
+                                        /*
+                                         var y = dd.substring(0, 4);
+                                         var m = dd.substring(4, 6);
+                                         var d = dd.substring(6, 8);
+
+                                         var compatibleDate = y + "-" + m + "-" + d;
+                                         var nativeTime = Date.parse(compatibleDate);
+                                         */
 
                                         var itemData = versionData.items[item];
 
@@ -124,7 +186,7 @@ angular.module('myApp.remoteimage')
                                             fingerprint: itemData.combined_sha256,
                                             architecture: productData.arch,
                                             properties: {
-                                              description: "Ubuntu " + productData.release_title + " " + productData.release_codename + " (" + productData.release + ')',
+                                                description: "Ubuntu " + productData.release_title + " " + productData.release_codename + " (" + productData.release + ')',
                                             }
                                         }
 
@@ -154,81 +216,81 @@ angular.module('myApp.remoteimage')
 
 
             obj.cacheData = {
-              isCached: false,
+                isCached: false,
             };
 
 
             obj.checkFilter = function(result, filter) {
-              if (filter.search) {
-                 if (result.properties.description.toLowerCase().indexOf(filter.search.toLowerCase()) > -1) {
-                   if (filter.architecture) {
-                     if (result.architecture == filter.architecture) {
-                       return true;
-                     }
-                   } else {
-                     return true;
-                   }
-                 }
-              } else {
-                if (filter.architecture) {
-                  if (result.architecture == filter.architecture) {
-                    return true;
-                  }
+                if (filter.search) {
+                    if (result.properties.description.toLowerCase().indexOf(filter.search.toLowerCase()) > -1) {
+                        if (filter.architecture) {
+                            if (result.architecture == filter.architecture) {
+                                return true;
+                            }
+                        } else {
+                            return true;
+                        }
+                    }
                 } else {
-                  return true;
+                    if (filter.architecture) {
+                        if (result.architecture == filter.architecture) {
+                            return true;
+                        }
+                    } else {
+                        return true;
+                    }
                 }
-              }
 
-              return false;
+                return false;
             }
 
 
             obj.getByFilter = function(filter) {
-              //return obj.getAll();
+                //return obj.getAll();
 
-              return obj.getAll().then(function(data) {
-                if ( _.isEmpty(filter)) {
-                  return data;
-                }
-
-                var d = $q.defer();
-
-                var results = [];
-
-                for(var n=0; n<2; n++) {
-                  // wow this is fugly
-                  data[n].forEach(function(result) {
-                    if (obj.checkFilter(result, filter)) {
-                      results.push(result);
+                return obj.getAll().then(function(data) {
+                    if ( _.isEmpty(filter)) {
+                        return data;
                     }
-                  });
-                }
 
-                d.resolve([ results ]);
+                    var d = $q.defer();
 
-                return d.promise;
-              });
+                    var results = [];
+
+                    for(var n=0; n<2; n++) {
+                        // wow this is fugly
+                        data[n].forEach(function(result) {
+                            if (obj.checkFilter(result, filter)) {
+                                results.push(result);
+                            }
+                        });
+                    }
+
+                    d.resolve([ results ]);
+
+                    return d.promise;
+                });
             }
 
 
             obj.getAll = function() {
-              if (obj.cacheData.isCached == true) {
-                console.log("cached");
-                return obj.cacheData.p;
-              } else {
-                console.log("not cached");
-                var requests = [];
+                if (obj.cacheData.isCached == true) {
+                    console.log("cached");
+                    return obj.cacheData.p;
+                } else {
+                    console.log("not cached");
+                    var requests = [];
 
-                requests.push(obj.downloadRemoteimageListUbuntu());
-                requests.push(obj.downloadRemoteimageListImages());
+                    requests.push(obj.downloadRemoteimageListUbuntu());
+                    requests.push(obj.downloadRemoteimageListImages());
 
-                var p =  $q.all(requests);
+                    var p =  $q.all(requests);
 
-                obj.cacheData.p = p;
-                obj.cacheData.isCached = true;
+                    obj.cacheData.p = p;
+                    obj.cacheData.isCached = true;
 
-                return p;
-              }
+                    return p;
+                }
 
             }
 
