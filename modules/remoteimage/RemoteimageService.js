@@ -68,14 +68,38 @@ angular.module('myApp.remoteimage')
                     for (var product in data.products) {
                         var productData = data.products[product];
 
+                        //  "com.ubuntu.cloud:server:15.04:armhf": {
                         for (var shortdesc in productData) {
                             var shortData = productData[shortdesc];
 
+                            var newestVersion = 0;
+                            var newestVersionData = null;
+
+                            //    "versions": {
                             for (var version in shortData) {
+                                // "20150325": {
                                 var versionData = shortData[version];
 
+                                if (versionData.items == undefined) {
+                                    continue;
+                                }
+
+                                //      "items": {
                                 for (var item in versionData.items) {
                                     if (item == "lxd.tar.xz") {
+                                        var dd = "";
+                                        if (version.indexOf(".") > -1) {
+                                            dd = version.split(".")[0];
+                                        } else {
+                                            dd = version;
+                                        }
+                                        var y = dd.substring(0, 4);
+                                        var m = dd.substring(4, 6);
+                                        var d = dd.substring(6, 8);
+
+                                        var compatibleDate = y + "-" + m + "-" + d;
+                                        var nativeTime = Date.parse(compatibleDate);
+
                                         var itemData = versionData.items[item];
 
                                         var entry = {
@@ -100,13 +124,23 @@ angular.module('myApp.remoteimage')
                                             fingerprint: itemData.combined_sha256,
                                             architecture: productData.arch,
                                             properties: {
-                                              description: productData.release_title + " " + productData.release_codename + " " + productData.release,
+                                              description: "Ubuntu " + productData.release_title + " " + productData.release_codename + " (" + productData.release + ')',
                                             }
                                         }
 
-                                        results.push(entry);
+                                        if (nativeTime > newestVersion) {
+                                            newestVersion = nativeTime;
+                                            newestVersionData = entry;
+                                        }
+
+                                        //results.push(entry);
                                     }
                                 }
+
+                            }
+
+                            if (newestVersion > 0) {
+                                results.push(newestVersionData);
                             }
                         }
                     }
