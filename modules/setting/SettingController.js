@@ -7,12 +7,9 @@ angular.module('myApp.setting', ['ngRoute'])
             templateUrl: 'modules/setting/settings.html',
             controller: 'settingListCtrl',
             resolve: {
-              myconfig: function(SettingServices, $route) {
-                return SettingServices.getMyCfg();
-              },
-              config: function(SettingServices, $route) {
-                return SettingServices.getConfig();
-              }
+                myconfig: function(SettingServices, $route) {
+                    return SettingServices.getMyCfg();
+                },
             }
         })
         ;
@@ -20,36 +17,43 @@ angular.module('myApp.setting', ['ngRoute'])
 
 
     .controller('settingListCtrl', function ($scope, $routeParams, $filter, $location, $uibModal, $window,
-                                             SettingServices, myconfig, config)
+                                             SettingServices, myconfig)
     {
-      $scope.myconfig = myconfig;
-      $scope.config = config.data.metadata;
-      $scope.test = {};
-      $scope.testUrl = SettingServices.getLxdApiUrl();
+        $scope.myconfig = myconfig;
+        $scope.test = {};
+        $scope.testUrl = SettingServices.getLxdApiUrl();
 
-      $scope.save = function() {
-        SettingServices.setMyCfg($scope.myconfig);
-      }
-
-      $scope.testLxd = function() {
-        SettingServices.testLxd().then(function(data) {
-          $scope.test.lxd = "Success";
+        // Try to get config
+        SettingServices.getConfig().then(function(data) {
+            $scope.config = data.data.metadata;
         }, function(error) {
-          $scope.test.lxd = "Fail";
-        })
-      }
+            $scope.errMsg = "Could not get config from server: " + SettingServices.getLxdUrl();
+        });
 
-      $scope.testLxdAuth = function() {
-        SettingServices.testLxdAuth().then(function(data) {
-          $scope.test.lxdAuth = "Auth Success";
-        }, function(error) {
-          $scope.test.lxdAuth = "Auth Fail";
-        })
-      }
 
-      $scope.openTab = function() {
-        $window.open($scope.testUrl, '_blank');
-      }
+        $scope.save = function() {
+            SettingServices.setMyCfg($scope.myconfig);
+        }
+
+        $scope.testLxd = function() {
+            SettingServices.testLxd().then(function(data) {
+                $scope.test.lxd = "Success";
+            }, function(error) {
+                $scope.test.lxd = "Fail";
+            })
+        }
+
+        $scope.testLxdAuth = function() {
+            SettingServices.testLxdAuth().then(function(data) {
+                $scope.test.lxdAuth = "Auth Success";
+            }, function(error) {
+                $scope.test.lxdAuth = "Auth Fail";
+            })
+        }
+
+        $scope.openTab = function() {
+            $window.open($scope.testUrl, '_blank');
+        }
     })
 
 ;

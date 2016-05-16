@@ -1,110 +1,112 @@
 
 <div class="row">
 
-<div class="col-md-12">
-  <h2>Settings for LXD-GUI</h2>
+    <div class="col-md-12">
+        <h2>Settings for LXD-GUI</h2>
 
-  <div class="row">
-    <div class="col-md-2">
-      LXD Server host:port
+        <span class="label label-danger">{{errMsg}}</span>
+
+        <div class="row">
+            <div class="col-md-2">
+                LXD Server host:port
+            </div>
+
+            <div class="col-md-5">
+                <input size="32" type="text" ng-model="myconfig.lxdurl">
+            </div>
+
+            <div class="col-md-2">
+                <button class="btn btn-primary" type="button" ng-click="save()">Save</button>
+                <button class="btn btn-primary" type="button" ng-click="openTab()">Open</button>
+            </div>
+
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-2">
+            </div>
+
+            <div class="col-md-3">
+                <button class="btn btn-primary" type="button" ng-click="testLxd()">Test LXD</button>
+            </div>
+
+            <div class="col-md-2">
+                Result: {{test.lxd}}
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-2">
+            </div>
+
+            <div class="col-md-3">
+                <button class="btn btn-primary" type="button" ng-click="testLxdAuth()">Test LXD Auth</button>
+            </div>
+
+            <div class="col-md-2">
+                Result: {{test.lxdAuth}}
+            </div>
+        </div>
+
     </div>
-
-    <div class="col-md-5">
-       <input size="32" type="text" ng-model="myconfig.lxdurl">
-    </div>
-
-    <div class="col-md-2">
-      <button class="btn btn-primary" type="button" ng-click="save()">Save</button>
-      <button class="btn btn-primary" type="button" ng-click="openTab()">Open</button>
-    </div>
-
-  </div>
-
-
-  <div class="row">
-    <div class="col-md-2">
-    </div>
-
-    <div class="col-md-3">
-      <button class="btn btn-primary" type="button" ng-click="testLxd()">Test LXD</button>
-    </div>
-
-    <div class="col-md-2">
-      Result: {{test.lxd}}
-    </div>
-  </div>
-
-
-  <div class="row">
-    <div class="col-md-2">
-    </div>
-
-    <div class="col-md-3">
-      <button class="btn btn-primary" type="button" ng-click="testLxdAuth()">Test LXD Auth</button>
-    </div>
-
-    <div class="col-md-2">
-      Result: {{test.lxdAuth}}
-    </div>
-  </div>
-
-</div>
 
 </div>
 
 <div class="row">
-  &nbsp;
+    &nbsp;
 </div>
 
 
 <div class="row">
 
-<div class="col-md-12">
-  <h2>Settings for LXD</h2>
+    <div class="col-md-12">
+        <h2>Settings for LXD</h2>
 
-  <div class="row">
-    <div class="col-md-2">
-      Addresses:
+        <div class="row">
+            <div class="col-md-2">
+                Addresses:
+            </div>
+
+            <div class="col-md-2">
+                {{config.environment.addresses[0]}}
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-2">
+                Architecture:
+            </div>
+
+            <div class="col-md-2">
+                {{config.environment.architectures[0]}} / {{config.environment.architectures[1]}}
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-2">
+                Server Version:
+            </div>
+
+            <div class="col-md-2">
+                {{config.environment.server_version}}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-2">
+                Storage:
+            </div>
+
+            <div class="col-md-2">
+                {{config.environment.storage}}
+            </div>
+        </div>
+
+
     </div>
-
-    <div class="col-md-2">
-      {{config.environment.addresses[0]}}
-    </div>
-  </div>
-
-
-  <div class="row">
-    <div class="col-md-2">
-      Architecture:
-    </div>
-
-    <div class="col-md-2">
-      {{config.environment.architectures[0]}} / {{config.environment.architectures[1]}}
-    </div>
-  </div>
-
-
-  <div class="row">
-    <div class="col-md-2">
-      Server Version:
-    </div>
-
-    <div class="col-md-2">
-      {{config.environment.server_version}}
-    </div>
-  </div>
-
-  <div class="row">
-    <div class="col-md-2">
-      Storage:
-    </div>
-
-    <div class="col-md-2">
-      {{config.environment.storage}}
-    </div>
-  </div>
-
-
-</div>
 
 </div>
