@@ -68,7 +68,6 @@ angular.module('myApp.remoteimage')
                         for(var distribution in res) {
                             for (var release in res[distribution]) {
                                 for (var architecture in res[distribution][release]) {
-                                    console.log(distribution + " " + release + " " + architecture + " ");
                                     ret.push(res[distribution][release][architecture].data);
                                 }
                             }
