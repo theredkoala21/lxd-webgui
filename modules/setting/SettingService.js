@@ -11,7 +11,8 @@ angular.module('myApp.setting')
               if (cfg == null) {
 
                 cfg = {
-                  lxdurl: 'localhost:9000'
+                  lxdurl: 'localhost:9000',
+		  xhr_with_credentials: false
                 }
 
                 obj.setMyCfg(cfg);
