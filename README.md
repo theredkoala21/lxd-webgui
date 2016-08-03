@@ -114,6 +114,7 @@ $ sudo lxc config set core.https_address 127.0.0.1:9000
 $ sudo lxc config set core.https_allowed_origin https://localhost:8000
 $ sudo lxc config set core.https_allowed_methods "GET, POST, PUT, DELETE, OPTIONS"
 $ sudo lxc config set core.https_allowed_headers "Origin, X-Requested-With, Content-Type, Accept"
+$ sudo lxc config set core.https_allowed_credentials "true"
 $ sudo lxd restart
 ```
 

@@ -19,7 +19,8 @@ angular.module('myApp', [
   'myApp.profile'
 ]).
 
-config(['$routeProvider', function($routeProvider) {
+config(['$routeProvider', '$httpProvider', 'SettingServicesProvider', function($routeProvider, $httpProvider, SettingServicesProvider) {
+  $httpProvider.defaults.withCredentials = SettingServicesProvider.$get().getMyCfg()["xhr_with_credentials"];
   $routeProvider.otherwise({redirectTo: '/settings'});
 }]);
 

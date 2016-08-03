@@ -13,6 +13,10 @@
 
             <div class="col-md-5">
                 <input size="32" type="text" ng-model="myconfig.lxdurl">
+		<label for="xhr_with_credentials">
+			<input id="xhr_with_credentials" type="checkbox" ng-model="myconfig.xhr_with_credentials" ng-change="toggle_credentials()">
+			Send XHRs with credentials
+		</label>
             </div>
 
             <div class="col-md-2">
