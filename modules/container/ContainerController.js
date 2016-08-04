@@ -68,7 +68,7 @@ angular.module('myApp.container', ['ngRoute'])
     }])
 
 
-    .controller('containerViewCtrl', function ($scope, $routeParams, $filter, $location, $uibModal, $route,
+    .controller('containerViewCtrl', function ($scope, $routeParams, $filter, $location, $uibModal, $route, $interval,
                                                containerState, container, ContainerServices) {
         $scope.container = container.data.metadata;
         $scope.container.state = containerState.data.metadata;
@@ -93,10 +93,25 @@ angular.module('myApp.container', ['ngRoute'])
             modalInstance.result.then(function (newContainer) {
                 var newName = {name: newContainer.name};
                 // rename
-                ContainerServices.rename(container.name, newName).then(function (data) {
-                    // Move to main because location has changed
-                    $location.url("/containers/");
+                ContainerServices.rename(container.name, newName).then(function(data) {
+                  var operationUrl = data.data.operation;
+                  var refreshInterval;
+
+                  // Try until operation is finished
+                  refreshInterval = $interval(
+                    function() {
+                      ContainerServices.isOperationFinished(operationUrl).then(function(data) {
+                        // I dont really care if the operation is still running
+                      }, function(error) {
+                        // Operation returned 404, so its finished
+                        $interval.cancel(refreshInterval);
+                        window.location = "#/container-view/" + newContainer.name;
+                      });
+                    }, 200
+                  );
                 });
+
+
             }, function () {
                 // Nothing
             });
