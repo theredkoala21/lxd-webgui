@@ -80,12 +80,14 @@ angular.module('myApp.container')
 
 
             // Rename  a container
+            // Mode: Async
             obj.rename = function (containerName, containerData) {
                 return $http.post(SettingServices.getLxdApiUrl() + '/containers/' + containerName, containerData);
             }
 
 
             // Delete a container
+            // Mode: Async
             obj.delete = function (containerName) {
                 return $http.delete(SettingServices.getLxdApiUrl() + '/containers/' + containerName).then(function (data) {
                     return data;

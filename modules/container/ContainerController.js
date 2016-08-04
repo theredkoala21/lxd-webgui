@@ -160,7 +160,7 @@ angular.module('myApp.container', ['ngRoute'])
                       }
                     });
                   });
-                }, 1000
+                }, 500
               );
 
             });
@@ -183,9 +183,29 @@ angular.module('myApp.container', ['ngRoute'])
 
           // Handle modal answer
           modalInstance.result.then(function (container) {
-             ContainerServices.delete(container.name);
+             ContainerServices.delete(container.name).then(function(data) {
+               var operationUrl = data.data.operation;
+               var refreshInterval;
+
+               // Try until operation is finished
+               refreshInterval = $interval(
+                 function() {
+                   ContainerServices.isOperationFinished(operationUrl).then(function(data) {
+                     // I dont really care if the operation is still runnging
+                   }, function(error) {
+                     // Operation returned 404, so its finished
+                     $interval.cancel(refreshInterval);
+                     // TODO: check if successful
+
+                     var index = $scope.containers.indexOf(container);
+                     $scope.containers.splice(index, 1);
+                   });
+                 }, 500
+               );
+
+             });
           }, function () {
-            // Nothing
+            // Nothing, user canceled
           });
         }
 
