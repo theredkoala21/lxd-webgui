@@ -81,11 +81,14 @@
                 </tr>
 
                 <tr>
-                    <td> eth0 </td>
-                    <td>
-                      {{container.config["volatile.eth0.name"]}}
-                      {{container.config["volatile.eth0.hwaddr"]}}
-                    </td>
+                  <div class="row col-md-12">
+                    <div class="" ng-repeat="(interfaceName, interface) in container.state.network">
+                      <div class="row" ng-repeat="address in interface.addresses">
+                      <div class="col-md-6">{{interfaceName}}:</div>
+                      <div class="col-md-6">{{address.address}}</div>
+                      </div>
+                    </div>
+                  </div>
                 </tr>
 
                 <tr>
