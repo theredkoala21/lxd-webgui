@@ -109,7 +109,7 @@ angular.module('myApp.image', ['ngRoute'])
                 $route.reload();
             });
         };
-}   )
+    })
 
 
     .controller('imageListCtrl', function ($scope, $routeParams, $interval, $filter, $location, $uibModal,

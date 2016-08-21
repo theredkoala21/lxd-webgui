@@ -12,58 +12,58 @@ angular.module('myApp.container', ['ngRoute'])
                 }
             }
         })
-        .when('/container-create', {
-            title: 'Containers',
-            templateUrl: 'modules/container/container-create.html',
-            controller: 'containerCreateCtrl',
-            resolve: {
-                images: function (ImageServices, $route) {
-                    return ImageServices.getAll();
-                },
-                profiles: function(ProfileServices) {
-                    return ProfileServices.getAll();
-                },
-            }
-        })
-        .when('/container-view/:containerName', {
-            title: 'Container',
-            templateUrl: 'modules/container/container-view.html',
-            controller: 'containerViewCtrl',
-            resolve: {
-                containerState: function (ContainerServices, $route) {
-                    return ContainerServices.getState($route.current.params.containerName)
-                },
-                container: function (ContainerServices, $route) {
-                    return ContainerServices.getByName($route.current.params.containerName)
+            .when('/container-create', {
+                title: 'Containers',
+                templateUrl: 'modules/container/container-create.html',
+                controller: 'containerCreateCtrl',
+                resolve: {
+                    images: function (ImageServices, $route) {
+                        return ImageServices.getAll();
+                    },
+                    profiles: function(ProfileServices) {
+                        return ProfileServices.getAll();
+                    },
                 }
-            }
-        })
-        .when('/container-snapshots/:containerName', {
-            title: 'Container',
-            templateUrl: 'modules/container/container-snapshots.html',
-            controller: 'containerSnapshotCtrl',
-            resolve: {
-                snapshots: function (ContainerServices, $route) {
-                  return ContainerServices.getSnapshots($route.current.params.containerName)
-                },
-                container: function(ContainerServices, $route) {
-                  return ContainerServices.getByName($route.current.params.containerName)
+            })
+            .when('/container-view/:containerName', {
+                title: 'Container',
+                templateUrl: 'modules/container/container-view.html',
+                controller: 'containerViewCtrl',
+                resolve: {
+                    containerState: function (ContainerServices, $route) {
+                        return ContainerServices.getState($route.current.params.containerName)
+                    },
+                    container: function (ContainerServices, $route) {
+                        return ContainerServices.getByName($route.current.params.containerName)
+                    }
                 }
-            }
-        })
-        .when('/container-edit/:containerName', {
-            title: 'Container',
-            templateUrl: 'modules/container/container-edit.html',
-            controller: 'containerViewCtrl',
-            resolve: {
-                containerState: function (ContainerServices, $route) {
-                    return ContainerServices.getState($route.current.params.containerName)
-                },
-                container: function (ContainerServices, $route) {
-                    return ContainerServices.getByName($route.current.params.containerName)
+            })
+            .when('/container-snapshots/:containerName', {
+                title: 'Container',
+                templateUrl: 'modules/container/container-snapshots.html',
+                controller: 'containerSnapshotCtrl',
+                resolve: {
+                    snapshots: function (ContainerServices, $route) {
+                        return ContainerServices.getSnapshots($route.current.params.containerName)
+                    },
+                    container: function(ContainerServices, $route) {
+                        return ContainerServices.getByName($route.current.params.containerName)
+                    }
                 }
-            }
-        })
+            })
+            .when('/container-edit/:containerName', {
+                title: 'Container',
+                templateUrl: 'modules/container/container-edit.html',
+                controller: 'containerViewCtrl',
+                resolve: {
+                    containerState: function (ContainerServices, $route) {
+                        return ContainerServices.getState($route.current.params.containerName)
+                    },
+                    container: function (ContainerServices, $route) {
+                        return ContainerServices.getByName($route.current.params.containerName)
+                    }
+                }
+            })
         ;
     }])
 
@@ -94,21 +94,21 @@ angular.module('myApp.container', ['ngRoute'])
                 var newName = {name: newContainer.name};
                 // rename
                 ContainerServices.rename(container.name, newName).then(function(data) {
-                  var operationUrl = data.data.operation;
-                  var refreshInterval;
+                    var operationUrl = data.data.operation;
+                    var refreshInterval;
 
-                  // Try until operation is finished
-                  refreshInterval = $interval(
-                    function() {
-                      ContainerServices.isOperationFinished(operationUrl).then(function(data) {
-                        // I dont really care if the operation is still running
-                      }, function(error) {
-                        // Operation returned 404, so its finished
-                        $interval.cancel(refreshInterval);
-                        window.location = "#/container-view/" + newContainer.name;
-                      });
-                    }, 200
-                  );
+                    // Try until operation is finished
+                    refreshInterval = $interval(
+                        function() {
+                            ContainerServices.isOperationFinished(operationUrl).then(function(data) {
+                                // I dont really care if the operation is still running
+                            }, function(error) {
+                                // Operation returned 404, so its finished
+                                $interval.cancel(refreshInterval);
+                                window.location = "#/container-view/" + newContainer.name;
+                            });
+                        }, 200
+                    );
                 });
 
 
@@ -139,90 +139,90 @@ angular.module('myApp.container', ['ngRoute'])
 
         $scope.changeState = function (container, state) {
             ContainerServices.changeState(container.name, state).then(function(data) {
-              var operationUrl = data.data.operation;
-              var refreshInterval;
+                var operationUrl = data.data.operation;
+                var refreshInterval;
 
-              // Try until operation is finished
-              refreshInterval = $interval(
-                function() {
-                  ContainerServices.isOperationFinished(operationUrl).then(function(data) {
-                    // I dont really care if the operation is still runnging
-                  }, function(error) {
-                    // Operation returned 404, so its finished
-                    $interval.cancel(refreshInterval);
-                    ContainerServices.getByName(container.name).then(function(data) {
+                // Try until operation is finished
+                refreshInterval = $interval(
+                    function() {
+                        ContainerServices.isOperationFinished(operationUrl).then(function(data) {
+                            // I dont really care if the operation is still runnging
+                        }, function(error) {
+                            // Operation returned 404, so its finished
+                            $interval.cancel(refreshInterval);
+                            ContainerServices.getByName(container.name).then(function(data) {
 
-                      //_.findWhere($scope.containers, { name: container.name}) = data.data.metadata;
-                      for(var n=0; n<$scope.containers.length; n++) {
-                        if ($scope.containers[n].name == container.name) {
-                          $scope.containers[n] = data.data.metadata;
-                        }
-                      }
-                    });
-                  });
-                }, 500
-              );
+                                //_.findWhere($scope.containers, { name: container.name}) = data.data.metadata;
+                                for(var n=0; n<$scope.containers.length; n++) {
+                                    if ($scope.containers[n].name == container.name) {
+                                        $scope.containers[n] = data.data.metadata;
+                                    }
+                                }
+                            });
+                        });
+                    }, 500
+                );
 
             });
         }
 
 
         $scope.delete = function (container) {
-          // Create modal
-          var modalInstance = $uibModal.open({
-              animation: $scope.animationsEnabled,
-              templateUrl: 'modules/container/modalDelContainer.html',
-              controller: 'genericContainerModalCtrl',
-              size: 'sm',
-              resolve: {
-                container: function () {
-                    return container;
+            // Create modal
+            var modalInstance = $uibModal.open({
+                animation: $scope.animationsEnabled,
+                templateUrl: 'modules/container/modalDelContainer.html',
+                controller: 'genericContainerModalCtrl',
+                size: 'sm',
+                resolve: {
+                    container: function () {
+                        return container;
+                    }
                 }
-              }
-          });
+            });
 
-          // Handle modal answer
-          modalInstance.result.then(function (container) {
-             ContainerServices.delete(container.name).then(function(data) {
-               var operationUrl = data.data.operation;
-               var refreshInterval;
+            // Handle modal answer
+            modalInstance.result.then(function (container) {
+                ContainerServices.delete(container.name).then(function(data) {
+                    var operationUrl = data.data.operation;
+                    var refreshInterval;
 
-               // Try until operation is finished
-               refreshInterval = $interval(
-                 function() {
-                   ContainerServices.isOperationFinished(operationUrl).then(function(data) {
-                     // I dont really care if the operation is still runnging
-                   }, function(error) {
-                     // Operation returned 404, so its finished
-                     $interval.cancel(refreshInterval);
-                     // TODO: check if successful
+                    // Try until operation is finished
+                    refreshInterval = $interval(
+                        function() {
+                            ContainerServices.isOperationFinished(operationUrl).then(function(data) {
+                                // I dont really care if the operation is still runnging
+                            }, function(error) {
+                                // Operation returned 404, so its finished
+                                $interval.cancel(refreshInterval);
+                                // TODO: check if successful
 
-                     var index = $scope.containers.indexOf(container);
-                     $scope.containers.splice(index, 1);
-                   });
-                 }, 500
-               );
+                                var index = $scope.containers.indexOf(container);
+                                $scope.containers.splice(index, 1);
+                            });
+                        }, 500
+                    );
 
-             });
-          }, function () {
-            // Nothing, user canceled
-          });
+                });
+            }, function () {
+                // Nothing, user canceled
+            });
         }
 
 
         $scope.showTerminal = function(container) {
-          if (container.isTerminalShown) {
-            container.terminal.destroy();
-            container.isTerminalShown = false;
-            return;
-          }
+            if (container.isTerminalShown) {
+                container.terminal.destroy();
+                container.isTerminalShown = false;
+                return;
+            }
 
-          container.isTerminalShown = true;
+            container.isTerminalShown = true;
 
-          TerminalServices.getTerminal2(container.name).then(function(term) {
-            container.terminal = term;
-            term.open(document.getElementById('console' + container.name));
-          });
+            TerminalServices.getTerminal2(container.name).then(function(term) {
+                container.terminal = term;
+                term.open(document.getElementById('console' + container.name));
+            });
         }
     })
 
@@ -236,8 +236,8 @@ angular.module('myApp.container', ['ngRoute'])
 
         $scope.profiles = profiles;
         $scope.selected = {
-          profile: _.findWhere(profiles, { name: "default"} ),
-          ephemeral: false,
+            profile: _.findWhere(profiles, { name: "default"} ),
+            ephemeral: false,
         }
 
 
@@ -246,21 +246,21 @@ angular.module('myApp.container', ['ngRoute'])
         }
 
         $scope.createContainer = function (isValid) {
-          $scope.isSubmitted = true;
+            $scope.isSubmitted = true;
 
-          if (isValid) {
-            ContainerServices.create(
-                $scope.containerName,
-                $scope.selected.image.fingerprint,
-                $scope.selected.profile.name,
-                $scope.selected.ephemeral)
-                .then(function(data) {
-                  window.location = "#/containers";
-                }, function(error) {
-                  var errorMsg = error.error;
-                  console.log("Error: " + errorMsg);
-                });
-          }
+            if (isValid) {
+                ContainerServices.create(
+                    $scope.containerName,
+                    $scope.selected.image.fingerprint,
+                    $scope.selected.profile.name,
+                    $scope.selected.ephemeral)
+                    .then(function(data) {
+                        window.location = "#/containers";
+                    }, function(error) {
+                        var errorMsg = error.error;
+                        console.log("Error: " + errorMsg);
+                    });
+            }
 
         }
     })
@@ -268,33 +268,33 @@ angular.module('myApp.container', ['ngRoute'])
 
 
     .controller('containerSnapshotCtrl', function ($scope, $routeParams, $filter, $location, $uibModal,
-                                                 ContainerServices, snapshots, container) {
+                                                   ContainerServices, snapshots, container) {
         $scope.snapshots = snapshots;
         $scope.container = container.data.metadata;
 
         $scope.restore = function(snapshot) {
-          var modalInstance = $uibModal.open({
-              animation: $scope.animationsEnabled,
-              templateUrl: 'modules/container/modalSnapshotRestore.html',
-              controller: 'containerSnapshotRestoreModalCtrl',
-              size: 'md',
-              resolve: {
-                  container: function () {
-                      return $scope.container;
-                  },
-                  snapshot: function() {
-                    return snapshot;
-                  }
-              }
-          });
+            var modalInstance = $uibModal.open({
+                animation: $scope.animationsEnabled,
+                templateUrl: 'modules/container/modalSnapshotRestore.html',
+                controller: 'containerSnapshotRestoreModalCtrl',
+                size: 'md',
+                resolve: {
+                    container: function () {
+                        return $scope.container;
+                    },
+                    snapshot: function() {
+                        return snapshot;
+                    }
+                }
+            });
 
-          modalInstance.result.then(function (snapshotData) {
-              ContainerServices.restoreSnapshot($scope.container.name, snapshot.name).then(function(data) {
+            modalInstance.result.then(function (snapshotData) {
+                ContainerServices.restoreSnapshot($scope.container.name, snapshot.name).then(function(data) {
 
-              });
-          }, function () {
-              // Nothing
-          });
+                });
+            }, function () {
+                // Nothing
+            });
         }
 
         $scope.delete = function(snapshot) {
@@ -302,39 +302,39 @@ angular.module('myApp.container', ['ngRoute'])
         }
 
         $scope.createSnapshot = function() {
-          var modalInstance = $uibModal.open({
-              animation: $scope.animationsEnabled,
-              templateUrl: 'modules/container/modalSnapshotCreate.html',
-              controller: 'containerSnapshotCreateModalCtrl',
-              size: 'md',
-              resolve: {
-                  container: function () {
-                      return $scope.container;
-                  }
-              }
-          });
+            var modalInstance = $uibModal.open({
+                animation: $scope.animationsEnabled,
+                templateUrl: 'modules/container/modalSnapshotCreate.html',
+                controller: 'containerSnapshotCreateModalCtrl',
+                size: 'md',
+                resolve: {
+                    container: function () {
+                        return $scope.container;
+                    }
+                }
+            });
 
-          modalInstance.result.then(function (snapshotData) {
-              ContainerServices.createSnapshot($scope.container.name, snapshotData).then(function (data) {
-                  ContainerServices.getSnapshots().then(function(data) {
-                    $scope.snapshots = data;
-                  });
-              });
-          }, function () {
-              // Nothing
-          });
+            modalInstance.result.then(function (snapshotData) {
+                ContainerServices.createSnapshot($scope.container.name, snapshotData).then(function (data) {
+                    ContainerServices.getSnapshots().then(function(data) {
+                        $scope.snapshots = data;
+                    });
+                });
+            }, function () {
+                // Nothing
+            });
 
         }
     })
 
 
     .controller('containerSnapshotCreateModalCtrl', function ($scope, $routeParams, $filter, $location, $uibModalInstance,
-                                                       container, ContainerServices) {
+                                                              container, ContainerServices) {
         $scope.container = container;
 
         $scope.snapshotData = {
-          name: "",
-          stateful: true
+            name: "",
+            stateful: true
         };
 
         $scope.ok = function () {
@@ -347,7 +347,7 @@ angular.module('myApp.container', ['ngRoute'])
     })
 
     .controller('containerSnapshotRestoreModalCtrl', function ($scope, $routeParams, $filter, $location, $uibModalInstance,
-                                                       container, snapshot, ContainerServices) {
+                                                               container, snapshot, ContainerServices) {
         $scope.container = container;
         $scope.snapshot = snapshot;
 
