@@ -13,9 +13,13 @@
                     <td> {{network.type}} </td>
                 </tr>
 
-                <tr>
+                <tr ng-if="network.used_by.length > 0">
                     <td> Used By: </td>
-                    <td>  </td>
+                    <td>
+                        <div class="" ng-repeat="bywhom in network.usedBy">
+                            <a ng-href="#/container-view/{{bywhom.name}}">{{bywhom.name}}</a>
+                        </div>
+                    </td>
                 </tr>
 
             </tbody>

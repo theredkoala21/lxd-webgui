@@ -29,6 +29,20 @@ angular.module('myApp.network', ['ngRoute'])
     .controller('networkViewCtrl', function ($scope, $routeParams, $filter, $location, network, NetworkServices) {
         $scope.network = network.data.metadata;
 
+        console.log("A: " + $scope.network.used_by);
+        if ($scope.network.used_by.length > 0) {
+            $scope.network.usedBy = [];
+
+            // Should be in service?
+            for(var n=0; n<$scope.network.used_by.length; n++) {
+                NetworkServices.getByUrl($scope.network.used_by[n]).then(function(data) {
+                    console.log("D: " + n + " : " + JSON.stringify(data));
+                    $scope.network.usedBy.push(data.data.metadata);
+                })
+            }
+
+        }
+
     })
 
     .controller('networkListCtrl', function ($scope, $routeParams, $filter, $location,

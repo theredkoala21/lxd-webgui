@@ -18,10 +18,8 @@ angular.module('myApp.network')
             }
 
             // Get a network
-            obj.getByUrl = function (networkUrl, callback) {
-                $http.get(SettingServices.getLxdUrl() + networkUrl).success(function (data) {
-                    callback(data);
-                });
+            obj.getByUrl = function (networkUrl) {
+                return $http.get(SettingServices.getLxdUrl() + networkUrl);
             }
 
 
@@ -38,7 +36,8 @@ angular.module('myApp.network')
 
                     var promises = data.metadata.map(function (networkUrl) {
                         return $http.get(SettingServices.getLxdUrl() + '/' + networkUrl).then(function (resp) {
-                            return resp.data.metadata;
+                            data = resp.data.metadata;
+                            return data;
                         });
                     });
 
