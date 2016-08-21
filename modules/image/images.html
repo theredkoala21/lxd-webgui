@@ -5,9 +5,9 @@
         <table class="table table-condensed">
             <thead>
             <th>Hash</th>
+            <th>Alias</th>
             <th>Description</th>
-            <th> OS </th>
-            <th>Architecture</th>
+            <th>OS </th>
             <th>Size</th>
             <th>Action</th>
             </thead>
@@ -19,16 +19,18 @@
                     </td>
 
                     <td>
+                        <div class="" ng-repeat="alias in image.aliases">
+                            {{alias.name}}
+                        </div>
+                    </td>
+
+                    <td>
                       {{image.properties.description}}
                     </td>
 
                     <td>
                       {{image.properties.os}} {{image.properties.release}} {{image.properties.version}}
                     </td>
-
-                    <td> {{image.architecture}}
-                    </td>
-
 
                     <td> {{image.size}}</td>
 

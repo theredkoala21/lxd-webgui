@@ -19,6 +19,15 @@
                     <td> {{image.fingerprint}} </td>
                 </tr>
 
+                <tr>
+                    <td>Aliases </td>
+                    <td>
+                        <div class="" ng-repeat="alias in image.aliases">
+                            {{alias.name}} - {{alias.description}}
+                        </div>
+                    </td>
+                </tr>
+
 
                 <tr>
                     <td> Cached </td>
