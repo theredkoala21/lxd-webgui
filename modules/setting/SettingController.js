@@ -17,8 +17,8 @@ angular.module('myApp.setting', ['ngRoute'])
 
 
     .controller('settingListCtrl', [
-	'$http', '$scope', '$routeParams', '$filter', '$location', '$uibModal', '$window', 'SettingServices', 'myconfig', 
-	function ($httpProvider, $scope, $routeParams, $filter, $location, $uibModal, $window,
+	'$http', '$scope', '$routeParams', '$route', '$filter', '$location', '$uibModal', '$window', 'SettingServices', 'myconfig',
+	function ($httpProvider, $scope, $routeParams, $route, $filter, $location, $uibModal, $window,
                                              SettingServices, myconfig)
     {
         $scope.myconfig = myconfig;
@@ -32,13 +32,14 @@ angular.module('myApp.setting', ['ngRoute'])
             $scope.errMsg = "Could not get config from server: " + SettingServices.getLxdUrl();
         });
 
-	$scope.toggle_credentials = function() {
-	    $httpProvider.defaults.withCredentials = $scope.myconfig.xhr_with_credentials;
-	    $scope.save();
-	};
+        $scope.toggle_credentials = function() {
+            $httpProvider.defaults.withCredentials = $scope.myconfig.xhr_with_credentials;
+            $scope.save();
+        };
 
         $scope.save = function() {
             SettingServices.setMyCfg($scope.myconfig);
+            $route.reload();
         }
 
         $scope.testLxd = function() {
