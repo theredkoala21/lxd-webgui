@@ -51,8 +51,40 @@ angular.module('myApp.image')
                   });
                 }
 
+
                 obj.delete = function(container) {
                   return $http.delete(SettingServices.getLxdApiUrl() + '/images/' + container.fingerprint);
+                }
+
+
+                // Alias
+                obj.renameAlias = function(origAlias, newAlias) {
+                    var postData = {
+                        "name": newAlias.name,
+                    };
+
+                    // sync
+                    return $http.post(SettingServices.getLxdApiUrl() + '/images/aliases/' + origAlias.name, postData);
+                }
+
+
+                // Alias
+                obj.addAlias = function(image, alias) {
+                    var postData = {
+                        description: alias.description,
+                        name: alias.name,
+                        target: image.fingerprint,
+                    };
+
+                    // sync
+                    return $http.post(SettingServices.getLxdApiUrl() + '/images/aliases', postData);
+                }
+
+
+                // Alias
+                obj.removeAlias = function(alias) {
+                    // sync
+                    return $http.delete(SettingServices.getLxdApiUrl() + '/images/aliases/' + alias.name);
                 }
 
 

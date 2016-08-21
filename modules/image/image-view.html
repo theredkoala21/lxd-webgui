@@ -20,11 +20,16 @@
                 </tr>
 
                 <tr>
-                    <td>Aliases </td>
+                    <td>Aliases
+                        <a href ng-click="openAddAliasDialog()"><span class="glyphicon glyphicon-plus"></span></a>
+                    </td>
                     <td>
                         <div class="" ng-repeat="alias in image.aliases">
                             {{alias.name}} - {{alias.description}}
+                            <a href ng-click="openEditAliasDialog(alias)"><span class="glyphicon glyphicon-edit"></span></a>
+                            <a href ng-click="removeAlias(alias)"><span class="glyphicon glyphicon-remove"></span></a>
                         </div>
+
                     </td>
                 </tr>
 

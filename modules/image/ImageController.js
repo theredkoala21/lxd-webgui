@@ -32,9 +32,85 @@ angular.module('myApp.image', ['ngRoute'])
     }])
 
 
-    .controller('imageViewCtrl', function ($scope, $routeParams, $filter, $location, image, ImageServices) {
+    .controller('imageViewCtrl', function ($scope, $routeParams, $filter, $location, $uibModal, $route,
+                                           image, ImageServices) {
         $scope.image = image.data.metadata;
-    })
+
+        $scope.openEditAliasDialog = function (alias) {
+            var modalInstance = $uibModal.open({
+                animation: $scope.animationsEnabled,
+                templateUrl: 'modules/image/modalEditAlias.html',
+                controller: 'editAliasModalCtrl',
+                size: 'sm',
+                resolve: {
+                    alias: function() {
+                        return alias;
+                    },
+                    image: function () {
+                        return $scope.image;
+                    }
+                }
+            });
+
+            modalInstance.result.then(function (data) {
+                var origAlias = data.origAlias;
+                var newAlias = data.newAlias;
+
+                // rename
+                ImageServices.renameAlias(origAlias, newAlias).then(function (data) {
+                    if (data.status != "Success") {
+                        console.log("Something went wrong");
+                    }
+                });
+
+
+            }, function () {
+                // Nothing
+            });
+        }
+
+
+        $scope.openAddAliasDialog = function (alias) {
+            var modalInstance = $uibModal.open({
+                animation: $scope.animationsEnabled,
+                templateUrl: 'modules/image/modalAddAlias.html',
+                controller: 'addAliasModalCtrl',
+                size: 'sm',
+                resolve: {
+                    image: function () {
+                        return $scope.image;
+                    }
+                }
+            });
+
+            modalInstance.result.then(function (data) {
+                var image = data.image;
+                var alias = data.alias;
+
+                // add alias
+                ImageServices.addAlias(image, alias).then(function (data) {
+                    if (data.status != "Success") {
+                        console.log("Something went wrong");
+                    }
+                    $route.reload();
+
+                });
+            }, function () {
+                // Nothing
+            });
+        };
+
+
+        $scope.removeAlias = function (alias) {
+            ImageServices.removeAlias(alias).then(function (data) {
+                if (data.status != "Success") {
+                    console.log("Something went wrong");
+                }
+                $route.reload();
+            });
+        };
+}   )
+
 
     .controller('imageListCtrl', function ($scope, $routeParams, $interval, $filter, $location, $uibModal,
                                            ContainerServices, ImageServices, images) {
@@ -90,6 +166,36 @@ angular.module('myApp.image', ['ngRoute'])
 
         $scope.ok = function () {
             $uibModalInstance.close($scope.image);
+        };
+
+        $scope.cancel = function () {
+            $uibModalInstance.dismiss('cancel');
+        };
+    })
+
+
+    .controller('addAliasModalCtrl', function ($scope, $routeParams, $filter, $location, $uibModalInstance,
+                                                   image, ImageServices) {
+        $scope.image = image;
+
+        $scope.ok = function () {
+            $uibModalInstance.close( { image: $scope.image, alias: $scope.alias} );
+        };
+
+        $scope.cancel = function () {
+            $uibModalInstance.dismiss('cancel');
+        };
+    })
+
+
+    .controller('editAliasModalCtrl', function ($scope, $routeParams, $filter, $location, $uibModalInstance,
+                                                image, alias, ImageServices) {
+        $scope.image = image;
+        $scope.alias = alias;
+        $scope.origAlias = angular.copy(alias);
+
+        $scope.ok = function () {
+            $uibModalInstance.close( { origAlias: $scope.origAlias, newAlias: $scope.alias} );
         };
 
         $scope.cancel = function () {
