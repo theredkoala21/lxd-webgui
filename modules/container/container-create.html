@@ -43,6 +43,7 @@
                 </ui-select-match>
 
                 <ui-select-choices repeat="image in (images | filter: $select.search)">
+                    {{image.aliases[0].name}}
                     <span ng-bind="image.properties.description"></span>
                 </ui-select-choices>
             </ui-select>
@@ -70,7 +71,8 @@
                     <span ng-bind="$select.selected.name"></span>
                 </ui-select-match>
                 <ui-select-choices repeat="profile in (profiles | filter: $select.search)">
-                    <span ng-bind="profile.name"></span>
+
+                  <span ng-bind="profile.name"></span>
                 </ui-select-choices>
             </ui-select>
           </div>
