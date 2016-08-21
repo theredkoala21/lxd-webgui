@@ -12,58 +12,58 @@ angular.module('myApp.container', ['ngRoute'])
                 }
             }
         })
-            .when('/container-create', {
-                title: 'Containers',
-                templateUrl: 'modules/container/container-create.html',
-                controller: 'containerCreateCtrl',
-                resolve: {
-                    images: function (ImageServices, $route) {
-                        return ImageServices.getAll();
-                    },
-                    profiles: function(ProfileServices) {
-                        return ProfileServices.getAll();
-                    },
+        .when('/container-create', {
+            title: 'Containers',
+            templateUrl: 'modules/container/container-create.html',
+            controller: 'containerCreateCtrl',
+            resolve: {
+                images: function (ImageServices, $route) {
+                    return ImageServices.getAll();
+                },
+                profiles: function(ProfileServices) {
+                    return ProfileServices.getAll();
+                },
+            }
+        })
+        .when('/container-view/:containerName', {
+            title: 'Container',
+            templateUrl: 'modules/container/container-view.html',
+            controller: 'containerViewCtrl',
+            resolve: {
+                containerState: function (ContainerServices, $route) {
+                    return ContainerServices.getState($route.current.params.containerName)
+                },
+                container: function (ContainerServices, $route) {
+                    return ContainerServices.getByName($route.current.params.containerName)
                 }
-            })
-            .when('/container-view/:containerName', {
-                title: 'Container',
-                templateUrl: 'modules/container/container-view.html',
-                controller: 'containerViewCtrl',
-                resolve: {
-                    containerState: function (ContainerServices, $route) {
-                        return ContainerServices.getState($route.current.params.containerName)
-                    },
-                    container: function (ContainerServices, $route) {
-                        return ContainerServices.getByName($route.current.params.containerName)
-                    }
+            }
+        })
+        .when('/container-snapshots/:containerName', {
+            title: 'Container',
+            templateUrl: 'modules/container/container-snapshots.html',
+            controller: 'containerSnapshotCtrl',
+            resolve: {
+                snapshots: function (ContainerServices, $route) {
+                    return ContainerServices.getSnapshots($route.current.params.containerName)
+                },
+                container: function(ContainerServices, $route) {
+                    return ContainerServices.getByName($route.current.params.containerName)
                 }
-            })
-            .when('/container-snapshots/:containerName', {
-                title: 'Container',
-                templateUrl: 'modules/container/container-snapshots.html',
-                controller: 'containerSnapshotCtrl',
-                resolve: {
-                    snapshots: function (ContainerServices, $route) {
-                        return ContainerServices.getSnapshots($route.current.params.containerName)
-                    },
-                    container: function(ContainerServices, $route) {
-                        return ContainerServices.getByName($route.current.params.containerName)
-                    }
+            }
+        })
+        .when('/container-edit/:containerName', {
+            title: 'Container',
+            templateUrl: 'modules/container/container-edit.html',
+            controller: 'containerViewCtrl',
+            resolve: {
+                containerState: function (ContainerServices, $route) {
+                    return ContainerServices.getState($route.current.params.containerName)
+                },
+                container: function (ContainerServices, $route) {
+                    return ContainerServices.getByName($route.current.params.containerName)
                 }
-            })
-            .when('/container-edit/:containerName', {
-                title: 'Container',
-                templateUrl: 'modules/container/container-edit.html',
-                controller: 'containerViewCtrl',
-                resolve: {
-                    containerState: function (ContainerServices, $route) {
-                        return ContainerServices.getState($route.current.params.containerName)
-                    },
-                    container: function (ContainerServices, $route) {
-                        return ContainerServices.getByName($route.current.params.containerName)
-                    }
-                }
-            })
+            }
+        })
         ;
     }])
 
@@ -207,7 +207,7 @@ angular.module('myApp.container', ['ngRoute'])
             }, function () {
                 // Nothing, user canceled
             });
-        }
+        };
 
 
         $scope.showTerminal = function(container) {
@@ -223,7 +223,29 @@ angular.module('myApp.container', ['ngRoute'])
                 container.terminal = term;
                 term.open(document.getElementById('console' + container.name));
             });
-        }
+        };
+
+
+        $scope.refresher = function() {
+            var refreshInterval = $interval(
+                function() {
+                    ContainerServices.getAll().then(function(data) {
+                        // Check if there are new ones, and add them
+                        // We will not replace the whole list, because we want that the
+                        // JS terminals stay alive.
+                        angular.forEach(data, function(value, key) {
+                            var exist = _.findWhere($scope.containers, { name: value.name} );
+                            if (exist == undefined) {
+                                $scope.containers.push(value);
+                            }
+                        });
+                    });
+
+                }, 5000
+            );
+        };
+        $scope.refresher();
+
     })
 
 

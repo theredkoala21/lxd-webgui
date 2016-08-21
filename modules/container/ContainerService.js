@@ -7,17 +7,20 @@ angular.module('myApp.container')
 
             obj.isOperationFinished = function (operationUrl) {
                 return $http.get(SettingServices.getLxdApiUrl() + operationUrl);
-            }
+            };
+
 
             // Get a container
             obj.getByName = function (containerName) {
                 return $http.get(SettingServices.getLxdApiUrl() + '/containers/' + containerName).then(function(response) {
                   return response;
                 });
-            }
+            };
 
-            // Get all containers
+
+            // Get all containers,  including detailed data
             obj.getAll = function () {
+                // Sync
                 return $http.get(SettingServices.getLxdApiUrl() + '/containers').then(function (data) {
                     data = data.data;
 
@@ -33,7 +36,14 @@ angular.module('myApp.container')
 
                     return $q.all(promises);
                 });
-            }
+            };
+
+
+            // Get all containers,  including detailed data
+            obj.getAllSimple = function () {
+                // Sync
+                return $http.get(SettingServices.getLxdApiUrl() + '/containers');
+            };
 
 
             // Create container:
@@ -57,7 +67,8 @@ angular.module('myApp.container')
 
                   data = data.metadata;
                 });
-            }
+            };
+
 
             obj.createFromAlias = function (containerData, imageData) {
                 containerData.source = {
@@ -65,7 +76,7 @@ angular.module('myApp.container')
                     alias: "ubuntu/16.04"
                 };
                 return $http.post(SettingServices.getLxdApiUrl() + '/containers', containerData);
-            }
+            };
 
 
             // Modify container:
@@ -76,14 +87,14 @@ angular.module('myApp.container')
                 return $http.put(SettingServices.getLxdApiUrl() + '/containers/' + containerName, containerData).then(function (data) {
                     return(data);
                 });
-            }
+            };
 
 
             // Rename  a container
             // Mode: Async
             obj.rename = function (containerName, containerData) {
                 return $http.post(SettingServices.getLxdApiUrl() + '/containers/' + containerName, containerData);
-            }
+            };
 
 
             // Delete a container
@@ -92,13 +103,14 @@ angular.module('myApp.container')
                 return $http.delete(SettingServices.getLxdApiUrl() + '/containers/' + containerName).then(function (data) {
                     return data;
                 });
-            }
+            };
 
 
             /** State **/
             obj.getState = function (containerName) {
                 return $http.get(SettingServices.getLxdApiUrl() + '/containers/' + containerName + '/state');
-            }
+            };
+
 
             obj.changeState = function (containerName, state) {
                 var data =
@@ -107,10 +119,10 @@ angular.module('myApp.container')
                     "timeout": 30,          // A timeout after which the state change is considered as failed
                     "force": true,          // Force the state change (currently only valid for stop and restart where it means killing the container)
                     "stateful": false        // Whether to store or restore runtime state before stopping or startiong (only valid for stop and start, defaults to false)
-                }
+                };
 
                 return $http.put(SettingServices.getLxdApiUrl() + '/containers/' + containerName + '/state', data);
-            }
+            };
 
 
             /** Snapshot **/
@@ -133,18 +145,20 @@ angular.module('myApp.container')
                   return $q.all(promises);
               });
 
-            }
+            };
+
 
             obj.createSnapshot = function(containerName, snapshotData) {
               return $http.post(SettingServices.getLxdApiUrl() + '/containers/' + containerName + '/snapshots', snapshotData);
-            }
+            };
+
 
             obj.restoreSnapshot = function(containerName, snapshotName) {
               var data = {
                 restore: snapshotName,
-              }
+              };
               return $http.put(SettingServices.getLxdApiUrl() + '/containers/' + containerName, data);
-            }
+            };
 
             return obj;
         }])
