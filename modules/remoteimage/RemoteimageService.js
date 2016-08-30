@@ -21,10 +21,10 @@ angular.module('myApp.remoteimage')
             obj.downloadRemoteimageListImages = function() {
                 var url = "https://images.linuxcontainers.org/";
 
-                return $http.get("https://images.linuxcontainers.org/1.0/images", {cache: true}).then(function(data) {
+                return $http.get("https://images.linuxcontainers.org/1.0/images", {withCredentials:false, cache: true}).then(function(data) {
 
                     var promises = data.data.metadata.map(function(imageUrl) {
-                        return $http.get(url + imageUrl, {cache: true}).then(function(resp) {
+                        return $http.get(url + imageUrl, {withCredentials: false, cache: true}).then(function(resp) {
                             resp.data.metadata.source = 'images';
                             resp.data.metadata.sourceUrl = url;
                             resp.data.metadata.sourceProto = 'lxd';
