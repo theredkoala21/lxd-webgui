@@ -82,10 +82,25 @@
               <td>
                 <div class="row col-md-12">
                   <div class="" ng-repeat="(interfaceName, interface) in container.state.network">
+
+                    <b>{{interfaceName}}:</b>
+
                     <div class="row" ng-repeat="address in interface.addresses">
-                    <div class="col-md-6">{{interfaceName}}:</div>
-                    <div class="col-md-6">{{address.address}}</div>
+                      <div class="col-md-6">Address: </div>
+                      <div class="col-md-6">{{address.address}}</div>
                     </div>
+
+                    <div class="row">
+                      <div class="col-md-6">Bytes received: </div>
+                      <div class="col-md-6">{{interface.counters.bytes_received}}</div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-md-6">Bytes sent: </div>
+                      <div class="col-md-6">{{interface.counters.bytes_sent}}</div>
+                    </div>
+
+                    <p></p>
                   </div>
                 </div>
               </td>
