@@ -9,10 +9,10 @@ angular.module('myApp.setting')
               var cfg = JSON.parse(localStorage.getItem('lxdcfg'));
 
               if (cfg == null) {
-
+                // this is the default config
                 cfg = {
                   lxdurl: 'localhost:9000',
-		  xhr_with_credentials: false
+                  xhr_with_credentials: true
                 }
 
                 obj.setMyCfg(cfg);
