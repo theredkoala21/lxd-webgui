@@ -13,15 +13,17 @@
 
             <div class="col-md-5">
                 <input size="32" type="text" ng-model="myconfig.lxdurl">
-		<label for="xhr_with_credentials">
-			<input id="xhr_with_credentials" type="checkbox" ng-model="myconfig.xhr_with_credentials" ng-change="toggle_credentials()">
-			Send XHRs with credentials
-		</label>
+                <button class="btn btn-primary" type="button" ng-click="save()">Save</button>
+
+
+                <p></p>
+                <label for="xhr_with_credentials">
+                  <input id="xhr_with_credentials" type="checkbox" ng-model="myconfig.xhr_with_credentials" ng-change="toggle_credentials()">
+                  Send XHRs with credentials
+                </label>
             </div>
 
             <div class="col-md-2">
-                <button class="btn btn-primary" type="button" ng-click="save()">Save</button>
-                <button class="btn btn-primary" type="button" ng-click="openTab()">Open</button>
             </div>
 
         </div>
@@ -51,6 +53,19 @@
 
             <div class="col-md-2">
                 Result: {{test.lxdAuth}}
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-2">
+            </div>
+
+            <div class="col-md-3">
+                <button class="btn btn-primary" type="button" ng-click="openTab()">Open LXD Url in new tab</button>
+            </div>
+
+            <div class="col-md-2">
             </div>
         </div>
 
