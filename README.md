@@ -8,6 +8,10 @@ Written completely in AngularJS. Does not need an application server, database o
 
 This software is beta.
 
+## Browser support
+
+Works best in Chrome. Works in Firefox. Safari is currently not supported.
+
 # Screenshot
 
 ![Screenshot](/doc/screenshot-overview.png?raw=true "Screenshot")
@@ -78,6 +82,9 @@ start http server to serve lxd-webgui:
 lxd-webgui$ http-server -S -a localhost -p 8000
 ```
 
+Of course you can just put the file to be served via Apache (/var/www) or any other web server.
+They are just static files.
+
 ## lxd configuration
 
 ### certs
@@ -90,17 +97,22 @@ $ mkdir lxc-cert
 $ cd lxc-cert
 $ openssl req -x509 -newkey rsa:2048 -keyout key.pem -out cert.pem -days 365 -nodes
 ```
-Content of certificate (CN, AU etc.) does not matter.
+Content of certificate (CN, AU etc.) does not really matter, but should contain something
+like "LXD" so you are able to select the correct cert when prompted.
 
 Convert cert to pkcs12:
 ```
 $ openssl pkcs12 -export -out cert.p12 -inkey key.pem -in cert.pem
 ```
 
-Now, add the PKCS12 cert.p12 to your browser:
+Now, add the PKCS12 cert.p12 to your browser, or your OS:
 ```
  Chrome: "Settings" -> "Manage Certificates" ->  "import" -> select the .p12 from above
+ Firefox: "Preferences" -> "Advanced" -> "Certificates" -> "View Certificates" -> "(Your Certificates)" -> "Import"
 ```
+
+Internet Explorer / Edge and Chrome will use the Windows/OSX certificate store. Firefox has its own certificate store.
+
 
 ## lxd configuration
 
@@ -118,21 +130,45 @@ $ sudo lxc config set core.https_allowed_credentials "true"
 $ sudo lxd restart
 ```
 
+## lxd-gui network access
+
+If you want to access LXD-GUI via the network, change the following:
+```
+$ sudo lxc config set core.https_address <your-ip>:9000
+$ sudo lxc config set core.https_allowed_origin *
+```
+
+This will allow anyone with a valid client cert to access the LXD API.
+You'll have to import the client certificate (p12) into the browser which
+you are using to access LXD-GUI.
+
+You can specify the LXD API server in the "Settings" tab in LXD-GUI.
+
 
 ## start
 
 important:
-try to access lxd: https://localhost:9000
+try to access lxd API: https://localhost:9000
 (and accept the certificate warning)
 
 
 access lxd-gui: https://localhost:8000
 
 
+# FAQ
+
+## Whats up with all the certs?
+
+LXD provides a REST based API via HTTPS webserver (here :9000). This webserver needs a server certificate.
+
+LXD-GUI is served via HTTPS via a webserver. This also needs a server certificate.
+
+The authentication to the LXD API is performed via a client certificate. This certificate is stored in the
+browser of the user. LXD-GUI performs HTTP requests to the API, which is authenticated via this client cert.
+
 
 # security considerations
 
 Do not let any other application run on the same domain+port as lxd-gui.
-
 
 There is no CSRF protection for the LXD REST service.
