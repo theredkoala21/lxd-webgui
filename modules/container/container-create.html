@@ -62,17 +62,17 @@
         <div class="form-group" ng-class="{ 'has-error' : userForm.name.$invalid && (!userForm.name.$pristine || isSubmitted )}">
 
           <div class="col-md-2">
-            <label>Profile</label>
+            <label>Profile(s)</label>
           </div>
 
           <div class="col-md-4">
-            <ui-select ng-model="selected.profile" required>
+            <ui-select multiple sortable="true" ng-model="selected.profile" required class="form-control">
                 <ui-select-match>
-                    <span ng-bind="$select.selected.name"></span>
+                  {{$item.name}}
                 </ui-select-match>
-                <ui-select-choices repeat="profile in (profiles | filter: $select.search)">
 
-                  <span ng-bind="profile.name"></span>
+                <ui-select-choices repeat="profile in profiles | filter: $select.search">
+                  <span ng-bind-html="profile.name | highlight: $select.search"></span>
                 </ui-select-choices>
             </ui-select>
           </div>

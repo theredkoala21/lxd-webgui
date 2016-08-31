@@ -249,7 +249,7 @@ angular.module('myApp.container', ['ngRoute'])
     })
 
 
-    .controller('containerCreateCtrl', function ($scope, $routeParams, $filter, $location,
+    .controller('containerCreateCtrl', function ($scope, $routeParams, $filter, $location, $interval,
                                                  ContainerServices, ImageServices, profiles, images) {
         $scope.containerName = "";
 
@@ -271,17 +271,36 @@ angular.module('myApp.container', ['ngRoute'])
             $scope.isSubmitted = true;
 
             if (isValid) {
+              // convert from selected profiles with full information
+              // to an array
+              var profiles = [];
+              for(var n=0; n<$scope.selected.profile.length; n++) {
+                profiles.push($scope.selected.profile[n].name);
+              }
+
                 ContainerServices.create(
                     $scope.containerName,
                     $scope.selected.image.fingerprint,
-                    $scope.selected.profile.name,
+                    profiles,
                     $scope.selected.ephemeral)
                     .then(function(data) {
-                        window.location = "#/containers";
-                    }, function(error) {
-                        var errorMsg = error.error;
-                        console.log("Error: " + errorMsg);
-                    });
+                      var operationUrl = data.data.operation;
+                      var refreshInterval;
+
+                      // Try until operation is finished
+                      refreshInterval = $interval(
+                          function() {
+                              ContainerServices.isOperationFinished(operationUrl).then(function(data) {
+                                  // I dont really care if the operation is still runnging
+                              }, function(error) {
+                                // Operation returned 404, so its finished
+                                $interval.cancel(refreshInterval);
+                                // TODO: check if successful
+                                window.location = "#/containers";
+                              });
+                          }, 500
+                      );
+                  });
             }
 
         }

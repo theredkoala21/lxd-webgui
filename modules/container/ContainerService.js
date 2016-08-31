@@ -47,10 +47,10 @@ angular.module('myApp.container')
 
 
             // Create container:
-            obj.create = function (containerName, imageFingerprint, profileName, ephemeralState) {
+            obj.create = function (containerName, imageFingerprint, profiles, ephemeralState) {
                 var containerData = {
                   name: containerName,
-                  profiles: [ profileName ],
+                  profiles: profiles,
                   ephemeral: ephemeralState,
                   source: {
                       type: "image",
@@ -58,15 +58,7 @@ angular.module('myApp.container')
                   }
                 };
                 // Async
-                return $http.post(SettingServices.getLxdApiUrl() + '/containers', containerData).then(function(data) {
-                  data = data.data;
-
-                  if (data.status != "Success") {
-                    return($q.reject(data.metadata));
-                  }
-
-                  data = data.metadata;
-                });
+                return $http.post(SettingServices.getLxdApiUrl() + '/containers', containerData)
             };
 
 
