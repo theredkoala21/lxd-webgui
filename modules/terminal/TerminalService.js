@@ -46,7 +46,7 @@ angular.module('myApp.remoteimage')
 
                  var term = new Terminal({
                      cols: 120,
-                     rows: 32,
+                     rows: 25,
                      useStyle: true,
                      screenKeys: true,
                      cursorBlink: false
