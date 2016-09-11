@@ -219,9 +219,15 @@ angular.module('myApp.container', ['ngRoute'])
 
             container.isTerminalShown = true;
 
-            TerminalServices.getTerminal2(container.name).then(function(term) {
-                container.terminal = term;
-                term.open(document.getElementById('console' + container.name));
+            // get JS terminal emulator
+            container.terminal = TerminalServices.getJavascriptTerminal();
+            container.terminal.open(document.getElementById('console' + container.name));
+
+            var initialGeometry = container.terminal.proposeGeometry();
+            console.log("Rows: " + initialGeometry.rows + " Cols: " + initialGeometry.cols);
+
+            TerminalServices.getTerminal2(container.name, container.terminal, initialGeometry).then(function(term) {
+                container.terminal.fit();
             });
         };
 

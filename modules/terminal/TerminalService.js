@@ -5,7 +5,21 @@ angular.module('myApp.remoteimage')
         function ($http, $q, SettingServices) {
             var obj = {};
 
-            obj.getTerminal = function(containerName) {
+
+            obj.getJavascriptTerminal = function() {
+              var term = new Terminal({
+                  cols: 120,
+                  rows: 25,
+                  useStyle: true,
+                  screenKeys: true,
+                  cursorBlink: false
+              });
+
+              return term;
+            }
+
+
+            obj.getTerminal = function(containerName, geometry) {
               var data = {
                   "command": ["bash"],
                   "environment": {
@@ -14,7 +28,9 @@ angular.module('myApp.remoteimage')
                     "USER": "root"
                   },
                   "wait-for-websocket": true,
-                  "interactive": true
+                  "interactive": true,
+                  "width": geometry.cols,
+                  "height": geometry.rows
               }
 
               return $http.post(SettingServices.getLxdApiUrl() + '/containers/' + containerName + "/exec", data).then(function(data) {
@@ -31,9 +47,8 @@ angular.module('myApp.remoteimage')
             }
 
 
-            obj.getTerminal2 = function(containerName) {
-
-              return obj.getTerminal(containerName).then(function(data) {
+            obj.getTerminal2 = function(containerName, term, geometry) {
+              return obj.getTerminal(containerName, geometry).then(function(data) {
                  var operationId = data.data.metadata.id;
                  var secret = data.data.metadata.metadata.fds[0];
 
@@ -44,48 +59,36 @@ angular.module('myApp.remoteimage')
 
                  var sock = new WebSocket(wssurl);
 
-                 var term = new Terminal({
-                     cols: 120,
-                     rows: 25,
-                     useStyle: true,
-                     screenKeys: true,
-                     cursorBlink: false
-                 });
-
                  term.on('data', function (data) {
                      sock.send(new Blob([data]));
                  });
 
 
                  sock.onopen = function (e) {
-                            //container.terminal = term;
-                            //term.open(document.getElementById('console'));
+                    sock.onmessage = function (msg) {
+                        if (msg.data instanceof Blob) {
+                            var reader = new FileReader();
+                            reader.addEventListener('loadend', function () {
+                                term.write(reader.result);
+                            });
+                            reader.readAsBinaryString(msg.data);
+                        } else {
+                            term.write(msg.data);
+                        }
 
-                            sock.onmessage = function (msg) {
-                                if (msg.data instanceof Blob) {
-                                    var reader = new FileReader();
-                                    reader.addEventListener('loadend', function () {
-                                        term.write(reader.result);
-                                    });
-                                    reader.readAsBinaryString(msg.data);
-                                } else {
-                                    term.write(msg.data);
-                                }
+                    };
 
-                            };
+                    sock.onclose = function (msg) {
+                        console.log('WebSocket closed');
+                        term.destroy();
+                    };
+                    sock.onerror = function (err) {
+                        console.error(err);
+                    };
+                };
 
-                            sock.onclose = function (msg) {
-                                console.log('WebSocket closed');
-                                term.destroy();
-                            };
-                            sock.onerror = function (err) {
-                                console.error(err);
-                            };
-                        };
-
-                        return term;
-                 })
-
+                return term;
+               })
             }
 
             return obj;
