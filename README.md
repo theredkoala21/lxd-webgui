@@ -33,7 +33,8 @@ install lxd as described here:
 
 My lxd init looks like this:
 ```
-$ sudo lxd init
+sudo lxd init
+
 Name of the storage backend to use (dir or zfs): zfs
 Create a new ZFS pool (yes/no)? yes
 Name of the new ZFS pool: lxdpool
@@ -49,16 +50,16 @@ LXD has been successfully configured.
 
 Install npm, bower and a simple http server:
 ```
-$ sudo apt-get install npm
-$ sudo npm install -g bower
-$ sudo npm install -g http-server
+sudo apt-get install npm
+sudo npm install -g bower
+sudo npm install -g http-server
 ```
 
 ### checkout LXD-WEBGUI
 
 ```
-$ git clone https://github.com/dobin/lxd-webgui.git
-$ cd lxd-webgui
+git clone https://github.com/dobin/lxd-webgui.git
+cd lxd-webgui
 ```
 
 
@@ -66,20 +67,20 @@ $ cd lxd-webgui
 
 install web dependencies for lxc-gui:
 ```
-lxd-webgui$ bower install
+bower install
 ```
 
 ### HTTP server
 
 create certs for the http server:
 ```
-lxd-webgui$ openssl req -x509 -newkey rsa:2048 -keyout key.pem -out cert.pem -days 365 -nodes
+openssl req -x509 -newkey rsa:2048 -keyout key.pem -out cert.pem -days 365 -nodes
 ```
 
 
 start http server to serve lxd-webgui:
 ```
-lxd-webgui$ http-server -S -a localhost -p 8000
+http-server -S -a localhost -p 8000
 ```
 
 Of course you can just put the file to be served via Apache (/var/www) or any other web server.
@@ -92,17 +93,17 @@ They are just static files.
 Create a self-signed cert to authenticate to LXD:
 
 ```
-$ cd ~/
-$ mkdir lxc-cert
-$ cd lxc-cert
-$ openssl req -x509 -newkey rsa:2048 -keyout key.pem -out cert.pem -days 365 -nodes
+cd ~/
+mkdir lxc-cert
+cd lxc-cert
+openssl req -x509 -newkey rsa:2048 -keyout key.pem -out cert.pem -days 365 -nodes
 ```
 Content of certificate (CN, AU etc.) does not really matter, but should contain something
 like "LXD" so you are able to select the correct cert when prompted.
 
 Convert cert to pkcs12:
 ```
-$ openssl pkcs12 -export -out cert.p12 -inkey key.pem -in cert.pem
+openssl pkcs12 -export -out cert.p12 -inkey key.pem -in cert.pem
 ```
 
 Now, add the PKCS12 cert.p12 to your browser, or your OS:
@@ -119,19 +120,19 @@ Internet Explorer / Edge and Chrome will use the Windows/OSX certificate store. 
 Most importantly, we have the add the above client certificate
 (~/lxd-cert/cert.pem) into the trusted certs of lxd:
 ```
-$ sudo lxc config trust add cert.pem
+sudo lxc config trust add cert.pem
 ```
 
 Configure LXD to listen to localhost on port 9000, and allow access from localhost port 8000 (where LXD-WEBGUI lives). We also have to configure LXD to accept the PUT, DELETE and OPTIONS HTTP headers, and fix allowed headers to  include "Content-Type".
 Afterwards, we NEED to restart it atm.
 
 ```
-$ sudo lxc config set core.https_address 127.0.0.1:9000
-$ sudo lxc config set core.https_allowed_origin https://localhost:8000
-$ sudo lxc config set core.https_allowed_methods "GET, POST, PUT, DELETE, OPTIONS"
-$ sudo lxc config set core.https_allowed_headers "Origin, X-Requested-With, Content-Type, Accept"
-$ sudo lxc config set core.https_allowed_credentials "true"
-$ sudo lxd restart
+sudo lxc config set core.https_address 127.0.0.1:9000
+sudo lxc config set core.https_allowed_origin https://localhost:8000
+sudo lxc config set core.https_allowed_methods "GET, POST, PUT, DELETE, OPTIONS"
+sudo lxc config set core.https_allowed_headers "Origin, X-Requested-With, Content-Type, Accept"
+sudo lxc config set core.https_allowed_credentials "true"
+sudo lxd restart
 ```
 
 ## LXD-WEBGUI network access
@@ -139,8 +140,8 @@ $ sudo lxd restart
 If you want to access LXD-WEBGUI via the network, configure LXD to listen
 to the network with:
 ```
-$ sudo lxc config set core.https_address <your-ip>:9000
-$ sudo lxc config set core.https_allowed_origin *
+sudo lxc config set core.https_address <your-ip>:9000
+sudo lxc config set core.https_allowed_origin *
 ```
 
 This will allow anyone with a valid client cert to access the LXD API.
