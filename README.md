@@ -127,8 +127,8 @@ Configure LXD to listen to localhost on port 9000, and allow access from localho
 Afterwards, we NEED to restart it atm.
 
 ```
-sudo lxc config set core.https_address 127.0.0.1:9000
-sudo lxc config set core.https_allowed_origin https://localhost:8000
+sudo lxc config set core.https_address [::]:9000
+sudo lxc config set core.https_allowed_origin "*"
 sudo lxc config set core.https_allowed_methods "GET, POST, PUT, DELETE, OPTIONS"
 sudo lxc config set core.https_allowed_headers "Origin, X-Requested-With, Content-Type, Accept"
 sudo lxc config set core.https_allowed_credentials "true"
