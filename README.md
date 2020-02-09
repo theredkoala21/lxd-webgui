@@ -178,3 +178,7 @@ browser of the user. LXD-WEBGUI performs HTTP requests to the API, which is auth
 Do not let any other application run on the same domain+port as LXD-WEBGUI.
 
 There is no CSRF protection for the LXD REST service.
+
+
+# Bridge container nic's to the LAN
+- https://blog.simos.info/how-to-make-your-lxd-container-get-ip-addresses-from-your-lan/
